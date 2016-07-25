@@ -17,7 +17,7 @@
         
         self.textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         self.textLabel.backgroundColor = [UIColor clearColor];
-        self.textLabel.textColor = [UIColor whiteColor];
+        self.textLabel.textColor = [UIColor blackColor];
         self.textLabel.font = [UIFont boldSystemFontOfSize:13];
         self.textLabel.textAlignment = NSTextAlignmentCenter;
         self.textLabel.adjustsFontSizeToFitWidth = YES;
@@ -48,10 +48,15 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
 
     //// Color Declarations
-    UIColor* gradientColor = [UIColor colorWithRed: 0.267 green: 0.303 blue: 0.335 alpha: 1];
-    UIColor* gradientColor2 = [UIColor colorWithRed: 0.04 green: 0.04 blue: 0.04 alpha: 1];
-    UIColor* shadowColor2 = [UIColor colorWithRed: 0.524 green: 0.553 blue: 0.581 alpha: 0.3];
+//    UIColor* gradientColor = [UIColor colorWithRed: 0.267 green: 0.303 blue: 0.335 alpha: 1];
+//    UIColor* gradientColor2 = [UIColor colorWithRed: 0.04 green: 0.04 blue: 0.04 alpha: 1];
+//    UIColor* shadowColor2 = [UIColor colorWithRed: 0.524 green: 0.553 blue: 0.581 alpha: 0.3];
 
+    //我改的
+    UIColor* gradientColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 1];
+    UIColor* gradientColor2 = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 1];
+    UIColor* shadowColor2 = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0];
+    
     //// Gradient Declarations
     NSArray* gradientColors = [NSArray arrayWithObjects:
                                (id)gradientColor.CGColor,
@@ -122,7 +127,9 @@
     CGContextRestoreGState(context);
     
     [[UIColor blackColor] setStroke];
+    //阴影线宽
     bezierPath.lineWidth = 1;
+    
     [bezierPath stroke];
     
     

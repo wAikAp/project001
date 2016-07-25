@@ -1,12 +1,11 @@
 //
 //  TXHRrettyRuler.m
 //  PrettyRuler
-//
-//  Created by GXY on 15/12/11.
-//  Copyright © 2015年 Tangxianhai. All rights reserved.
-//  withCount:(NSUInteger)count average:(NSUInteger)average
+
 
 #import "TXHRrettyRuler.h"
+
+#import "Masonry.h"
 
 #define SHEIGHT 8 // 中间指示器顶部闭合三角形高度
 #define INDICATORCOLOR [UIColor redColor].CGColor // 中间指示器颜色
@@ -18,10 +17,11 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColor clearColor];
         rulerScrollView = [self rulerScrollView];
         rulerScrollView.rulerHeight = frame.size.height;
         rulerScrollView.rulerWidth = frame.size.width;
+        
     }
     return self;
 }
@@ -38,6 +38,11 @@
     rulerScrollView.mode = mode;
     [rulerScrollView drawRuler];
     [self addSubview:rulerScrollView];
+    
+    [rulerScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.leading.trailing.bottom.mas_equalTo(self);
+    }];
+    
     [self drawRacAndLine];
 }
 
@@ -125,7 +130,7 @@
     
     shapeLayerArc.path = pathArc;
 //    [self.layer addSublayer:shapeLayerArc];
-//    [self.layer addSublayer:gradient];
+    [self.layer addSublayer:gradient];
     
     // 红色指示器
     CAShapeLayer *shapeLayerLine = [CAShapeLayer layer];
@@ -175,6 +180,3 @@
 }
 
 @end
-// 版权属于原作者
-// http://code4app.com (cn) http://code4app.net (en)
-// 发布代码于最专业的源码分享网站: Code4App.com

@@ -9,6 +9,8 @@
 #import "NYSliderPopover.h"
 #import "NYPopover.h"
 
+#import "Masonry.h"
+
 @implementation NYSliderPopover
 
 #pragma mark -
@@ -22,6 +24,7 @@
         _popover = [[NYPopover alloc] initWithFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y - 32, 40, 32)];
         [self updatePopoverFrame];
         _popover.alpha = 0;
+        
         [self.superview addSubview:_popover];
     }
     

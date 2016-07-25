@@ -10,18 +10,8 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="1s0-BW-Ic0" customClass="NYSliderPopover">
-                    <rect key="frame" x="8" y="416" width="294" height="45"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="44" id="HQD-zB-yxz"/>
-                    </constraints>
-                    <connections>
-                        <action selector="slideDidTouchUP:" destination="iN0-l3-epB" eventType="touchUpInside" id="QId-hc-9r7"/>
-                        <action selector="timeSliderValueChange:" destination="iN0-l3-epB" eventType="valueChanged" id="Dce-xM-Tvg"/>
-                    </connections>
-                </slider>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yqw-XX-JkC">
-                    <rect key="frame" x="10" y="362" width="44" height="44"/>
+                    <rect key="frame" x="10" y="386" width="44" height="44"/>
                     <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="44" id="75Y-w2-2e7"/>
@@ -54,11 +44,11 @@
                         <action selector="clockBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="WWt-QR-oxc"/>
                     </connections>
                 </button>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3YF-he-cUo" userLabel="RangeView">
-                    <rect key="frame" x="10" y="416" width="300" height="43"/>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3YF-he-cUo" userLabel="RangeView">
+                    <rect key="frame" x="10" y="440" width="300" height="29"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F0M-La-pdQ" customClass="TTRangeSlider">
-                            <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F0M-La-pdQ" customClass="TTRangeSlider">
+                            <rect key="frame" x="0.0" y="0.0" width="300" height="29"/>
                             <color key="backgroundColor" red="0.60000002379999995" green="0.60000002379999995" blue="0.60000002379999995" alpha="1" colorSpace="calibratedRGB"/>
                         </view>
                     </subviews>
@@ -70,25 +60,32 @@
                         <constraint firstItem="F0M-La-pdQ" firstAttribute="leading" secondItem="3YF-he-cUo" secondAttribute="leading" id="XfB-Gc-tFc"/>
                     </constraints>
                 </view>
+                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="1s0-BW-Ic0" customClass="NYSliderPopover">
+                    <rect key="frame" x="8" y="440" width="304" height="31"/>
+                    <connections>
+                        <action selector="slideDidTouchUP:" destination="iN0-l3-epB" eventType="touchUpInside" id="QId-hc-9r7"/>
+                        <action selector="timeSliderValueChange:" destination="iN0-l3-epB" eventType="valueChanged" id="Dce-xM-Tvg"/>
+                    </connections>
+                </slider>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="c3P-Ng-UKe" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="2yd-nk-dJq"/>
+                <constraint firstAttribute="trailing" secondItem="1s0-BW-Ic0" secondAttribute="trailing" constant="10" id="AJq-wU-TJQ"/>
                 <constraint firstItem="c3P-Ng-UKe" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="BNf-Tz-vla"/>
+                <constraint firstAttribute="bottom" secondItem="3YF-he-cUo" secondAttribute="bottom" constant="11" id="GYB-J0-twW"/>
                 <constraint firstItem="VXF-UD-oyi" firstAttribute="top" secondItem="c3P-Ng-UKe" secondAttribute="bottom" constant="10" id="JNg-gU-Qze"/>
                 <constraint firstAttribute="trailing" secondItem="c3P-Ng-UKe" secondAttribute="trailing" constant="10" id="MNK-tz-GdZ"/>
-                <constraint firstItem="1s0-BW-Ic0" firstAttribute="leading" secondItem="yqw-XX-JkC" secondAttribute="leading" id="Xbc-QD-u1s"/>
                 <constraint firstItem="3YF-he-cUo" firstAttribute="leading" secondItem="yqw-XX-JkC" secondAttribute="leading" id="ZGj-HX-vTL"/>
-                <constraint firstAttribute="bottom" secondItem="1s0-BW-Ic0" secondAttribute="bottom" constant="20" id="dBN-BZ-tZd"/>
-                <constraint firstAttribute="trailing" secondItem="1s0-BW-Ic0" secondAttribute="trailing" constant="20" id="eSm-AL-OfM"/>
                 <constraint firstItem="yqw-XX-JkC" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="gOe-TI-cKA"/>
                 <constraint firstAttribute="bottom" secondItem="1s0-BW-Ic0" secondAttribute="bottom" constant="35" id="hLP-rs-JVV"/>
                 <constraint firstItem="3YF-he-cUo" firstAttribute="top" secondItem="yqw-XX-JkC" secondAttribute="bottom" constant="10" id="qT6-BQ-I71"/>
-                <constraint firstItem="3YF-he-cUo" firstAttribute="centerY" secondItem="1s0-BW-Ic0" secondAttribute="centerY" id="t1c-VE-IrH"/>
+                <constraint firstItem="1s0-BW-Ic0" firstAttribute="top" secondItem="yqw-XX-JkC" secondAttribute="bottom" constant="10" id="rJQ-1c-CFp"/>
+                <constraint firstAttribute="bottom" secondItem="1s0-BW-Ic0" secondAttribute="bottom" constant="10" id="s2T-Wf-RPu"/>
                 <constraint firstItem="c3P-Ng-UKe" firstAttribute="centerX" secondItem="VXF-UD-oyi" secondAttribute="centerX" id="tTy-TE-2A6"/>
                 <constraint firstAttribute="trailing" secondItem="1s0-BW-Ic0" secondAttribute="trailing" constant="20" id="vdB-2Y-TUR"/>
+                <constraint firstItem="1s0-BW-Ic0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="wGv-3f-WWx"/>
                 <constraint firstItem="3YF-he-cUo" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="xeK-gC-3dN"/>
-                <constraint firstItem="1s0-BW-Ic0" firstAttribute="top" secondItem="yqw-XX-JkC" secondAttribute="bottom" constant="10" id="y41-7G-n0r"/>
                 <constraint firstAttribute="trailing" secondItem="3YF-he-cUo" secondAttribute="trailing" constant="10" id="z60-NK-kjv"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
@@ -101,7 +98,7 @@
             </variation>
             <variation key="heightClass=compact-widthClass=regular">
                 <mask key="constraints">
-                    <include reference="hLP-rs-JVV"/>
+                    <exclude reference="hLP-rs-JVV"/>
                     <exclude reference="vdB-2Y-TUR"/>
                 </mask>
             </variation>

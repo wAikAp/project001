@@ -2,8 +2,6 @@
 //  TXHRulerScrollView.m
 //  PrettyRuler
 //
-//  Created by GXY on 15/12/11.
-//  Copyright © 2015年 Tangxianhai. All rights reserved.
 //
 
 #import "TXHRulerScrollView.h"
@@ -76,7 +74,10 @@
     self.contentSize = CGSizeMake(self.rulerCount * DISTANCEVALUE + DISTANCELEFTANDRIGHT * 2.f, self.rulerHeight);
 }
 
+-(void)layoutSubviews
+{
+    [super layoutSubviews];
+//    self.frame = self.bounds;
+}
+
 @end
-// 版权属于原作者
-// http://code4app.com (cn) http://code4app.net (en)
-// 发布代码于最专业的源码分享网站: Code4App.com

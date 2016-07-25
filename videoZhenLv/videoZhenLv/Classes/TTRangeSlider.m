@@ -287,8 +287,8 @@ static const CGFloat kLabelsFontSize = 14.0f;
     [self updateLabelValues];    
 
     //    NSLog(@"slider - frame x = %f  y = %f",self.sliderLine.frame.origin.x,self.sliderLine.frame.origin.y);
-        float jinDu_w = self.minLabel.frame.origin.x * 1.0f;
-        float jinDu_wm = [NSString stringWithFormat:@"%.2f",jinDu_w].floatValue;
+//        float jinDu_w = self.minLabel.frame.origin.x * 1.0f;
+//        float jinDu_wm = [NSString stringWithFormat:@"%.2f",jinDu_w].floatValue;
 //        self.jinDuLine.frame = CGRectMake(JINDU_X, JINDU_Y, jinDu_wm, 10);
 //        NSLog(@"JINDU.Frame = %@",NSStringFromCGRect(self.jinDuLine.frame));
     //update the delegate

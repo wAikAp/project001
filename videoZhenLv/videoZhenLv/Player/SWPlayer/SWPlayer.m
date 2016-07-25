@@ -14,12 +14,9 @@
 #import "TTRangeSlider.h"
 
 
-@interface SWPlayer() <TTRangeSliderDelegate>
+@interface SWPlayer() //<TTRangeSliderDelegate>
 
-/**
- *  原生滑条
- */
-@property (weak, nonatomic) IBOutlet  NYSliderPopover*timeSlider;
+
 
 /**
  *  正在播放
@@ -79,7 +76,7 @@
         playerLayer.videoGravity =  AVLayerVideoGravityResizeAspect;
         [self bringSubviewToFront:self.playBtn];
         [self bringSubviewToFront:self.timeSlider];
-        [self bringSubviewToFront:self.rangeView];
+//        [self bringSubviewToFront:self.rangeView];
         [self bringSubviewToFront:self.clockBtn];
         [self bringSubviewToFront:self.clockLabel];
         
@@ -93,6 +90,7 @@
         self.timeSlider.maximumValue = assDura;
         [self.timeSlider setMinimumTrackImage:[UIImage imageNamed:@"slider"] forState:UIControlStateNormal];
         //range Slider
+        /*
         self.rangeSlider.delegate = self;
         self.rangeSlider.minValue = 0.0f;//最小值
         self.rangeSlider.maxValue = (float)assDura;//最大值
@@ -103,15 +101,17 @@
         self.rangeSlider.maxLabelColour = [UIColor whiteColor];
         self.rangeSlider.maxLabel.string = [NSString stringWithFormat:@"%.2f",(float)assDura];//选中的label的最大值
         self.rangeSlider.minLabel.string = [NSString stringWithFormat:@"%.2f",0.0f];//最小
+        */
+        
         
         CMTime zongT = self.player.currentItem.asset.duration;
         NSLog(@"总秒数 %f-> value数:%lld , 每秒帧数:%d  视频的总长度数: %lld",assDura,zongT.value,zongT.timescale, zongT.value * zongT.timescale);
-        
+
     }
     return self;
 }
 
-#pragma mark - 监听事件
+#pragma mark - 监听播放事件
 /**
  *  播放时监听
  */
@@ -123,19 +123,48 @@
     self.sliderValue = self.timeSlider.value = currentSec;
     //播完
     if (self.timeSlider.value == self.timeSlider.maximumValue) {
-        self.player.rate = 0;
-        [self.timer invalidate];
-        self.timer = nil;
-        self.playBtn.selected = NO;
+        self.player.rate = 0;//
+        [self.timer invalidate];//停止timer的监听
+        self.timer = nil;//timer指向nil
         self.playBtn.selected = NO;
         _playFinish = YES;
+        if (self.playerDidPlayFinish) {//播放完成
+            self.playerDidPlayFinish();//回调控制器
+        }
     }
-//    [self updateSliderPopoverText];
     
-    
+    [self updateSliderPopoverText];
+    NSLog(@"监听ing = 当前%f",self.sliderValue);
     CGFloat xiangChaSec = currentSec - self.biaoJiTime;
     [self changeClockLabelText:currentSec biaoJiTime:self.biaoJiTime differentTime:xiangChaSec];
-    self.rangeSlider.selectedMinimum = currentSec;
+//    self.rangeSlider.selectedMinimum = currentSec;
+    
+}
+
+
+#pragma mark - 外面拖动尺子改变帧
+/**
+ *  步进帧
+ */
+-(void)stepByCount:(CGFloat)count
+{
+    [self pause];
+    if (count > 0) {//每拖一次改变0.01秒
+//        NSLog(@"大于0啊");
+        count = count *0.01;
+        [self.timeSlider setValue:self.timeSlider.value + count animated:NO];
+        [self timeSliderValueChange:self.timeSlider];
+        self.sliderValue = self.timeSlider.value;
+    }else
+    {
+//        NSLog(@"小于0啊");
+        count = count *0.1;
+        //        self.sliderValue = self.timeSlider.value;
+        [self.timeSlider setValue:self.timeSlider.value + count animated:NO];
+        [self timeSliderValueChange:self.timeSlider];
+        self.sliderValue = self.timeSlider.value;
+    }
+    
     
 }
 
@@ -151,17 +180,17 @@
     self.timer = nil;
     self.playBtn.selected = NO;
     [self.player pause];
-
-    if (sender.value < self.sliderValue) {//向左拖
+    
+//    NSLog(@"self.value = %f timeSlide = %f",self.sliderValue,sender.value);
+    if (sender.value <= self.sliderValue) {//向左拖
         
         CMTime currenTime = [self.player.currentItem currentTime];
         
         float sliderValueChange = sender.value - self.sliderValue;
         self.sliderValue = sender.value;
-        NSLog(@"向左拖动");
         //视频现在的秒数
         float videoCurreSec = (CGFloat)currenTime.value/currenTime.timescale;
-        NSLog(@"向左slider的值改变了:%f",sliderValueChange);
+//        NSLog(@"向左slider的值改变了:%f",sliderValueChange);
         NSArray *itemTracks = self.player.currentItem.tracks;
         float moveZhen = 0 ;
         //拿出track 算每帧多少秒
@@ -174,14 +203,14 @@
                 CMTime minFrameDuration = assTrack.minFrameDuration;
                 //每帧的秒数
                 CGFloat meiZhenMiao = (CGFloat)minFrameDuration.value / minFrameDuration.timescale;
-                NSLog(@"每%f秒1帧",meiZhenMiao);
-                NSLog(@"视频现在在%f秒 进度条%f秒",videoCurreSec,sender.value);
+//                NSLog(@"每%f秒1帧",meiZhenMiao);
+//                NSLog(@"视频现在在%f秒 进度条%f秒",videoCurreSec,sender.value);
                 //要移动的帧数
                 moveZhen = sliderValueChange / meiZhenMiao;
-                NSLog(@"向左要移动%f帧", moveZhen);
+//                NSLog(@"向左要移动%f帧", moveZhen);
                 if (moveZhen > -0.5f) {
 //                    moveZhen = -1-moveZhen;
-                    NSLog(@"向左改变%f",moveZhen);
+//                    NSLog(@"向左改变%f",moveZhen);
                 }
             }
         }
@@ -192,11 +221,11 @@
         //更新滑动条上的label
         [self updateSliderPopoverText];
 
-    }else if (sender.value > self.sliderValue){//向右拖
+    }else if (sender.value >= self.sliderValue)
+    {//向右拖
         
-        NSLog(@"向右");
         float sliderValueChange = sender.value - self.sliderValue;
-        NSLog(@"向右slider的值改变了:%f",sliderValueChange);
+//        NSLog(@"向右slider的值改变了:%f",sliderValueChange);
         CMTime currenTime = [self.player.currentItem currentTime];
         //视频现在的秒数
         float videoCurreSec = (CGFloat)currenTime.value/currenTime.timescale;
@@ -214,8 +243,8 @@
                 CMTime minFrameDuration = assTrack.minFrameDuration;
                 //每帧的秒数
                 CGFloat meiZhenMiao = (CGFloat)minFrameDuration.value / minFrameDuration.timescale;
-                NSLog(@"向右每%f秒1帧",meiZhenMiao);
-                NSLog(@"视频现在在%f秒 进度条%f秒",videoCurreSec,sender.value);
+//                NSLog(@"向右每%f秒1帧",meiZhenMiao);
+//                NSLog(@"视频现在在%f秒 进度条%f秒",videoCurreSec,sender.value);
                 //要移动的帧数
                 moveZhen = sliderValueChange / meiZhenMiao;
 //                NSLog(@"要移动%f帧", moveZhen);
@@ -231,12 +260,12 @@
 //        self.sliderValue = videoCurreSec;
         //更新滑动条上的label
         [self updateSliderPopoverText];
-    }else
-    {
-        NSLog(@"哪都没进");
-        self.sliderValue = sender.value;
-        return;
     }
+    //拿出当前时间
+    CMTime currenTime = [self.player.currentItem currentTime];
+    float videoCurreSec = (CGFloat)currenTime.value/currenTime.timescale;
+    //改变标记
+    [self changeClockLabelText:videoCurreSec biaoJiTime:self.biaoJiTime differentTime:videoCurreSec - self.biaoJiTime];
 }
 
 /**
@@ -267,15 +296,20 @@
     }
 }
 
+
 /**
  *  标记时间
  *
  */
 - (IBAction)clockBtnClick:(UIButton *)sender {
     
-    [self.clockBtn setTitle:[NSString stringWithFormat:@"当前标记在%@",self.rangeSlider.minLabel.string] forState:UIControlStateNormal];
-    NSString *minStr = self.rangeSlider.minLabel.string;
-    self.biaoJiTime = minStr.floatValue;
+//    [self.clockBtn setTitle:[NSString stringWithFormat:@"当前标记在%@",self.rangeSlider.minLabel.string] forState:UIControlStateNormal];
+//    NSString *minStr = self.rangeSlider.minLabel.string;
+//    self.biaoJiTime = minStr.floatValue;
+    
+    [self.clockBtn setTitle:[NSString stringWithFormat:@"当前标记在%.2f",self.timeSlider.value] forState:UIControlStateNormal];
+    
+    self.biaoJiTime = self.timeSlider.value;
     
     //更新记时
     [self changeClockLabelText:self.biaoJiTime biaoJiTime:self.biaoJiTime differentTime:0.00];
@@ -283,6 +317,8 @@
     
 }
 
+
+#pragma mark - 播放暂停
 /**
  *  播放
  */
@@ -301,13 +337,16 @@
 }
 
 -(void)pause
-{   self.playBtn.selected = NO;
+{
+    self.playBtn.selected = NO;
     [self.player pause];
     [self.timer invalidate];
     self.timer = nil;
 }
 
 
+
+#pragma mark - timer
 /**
  *  创建时间加到runLoop
  *
@@ -321,13 +360,21 @@
     return timer;
 }
 
+#pragma mark - 更新滑动条上的popLabel
 /**
  *  更新滑动条上的popLabel
  */
 - (void)updateSliderPopoverText
 {
-    self.timeSlider.popover.textLabel.text = [NSString stringWithFormat:@"%.2f", self.timeSlider.value];
-    [self.timeSlider showPopover];
+    if (self.timeSlider.hidden)
+    {
+        return;
+    }else{
+        CMTime currenTime = [self.player.currentItem currentTime];
+        float videoCurreSec = (CGFloat)currenTime.value/currenTime.timescale;
+        self.timeSlider.popover.textLabel.text = [NSString stringWithFormat:@"%.2f", videoCurreSec];
+        [self.timeSlider showPopover];
+    }
 }
 
 -(void)layoutSubviews
@@ -337,6 +384,7 @@
 }
 
 #pragma mark - 自定义slider - TTRangeSliderDelegate
+/*
 -(void)rangeSlider:(TTRangeSlider *)sender didChangeSelectedMinimumValue:(float)selectedMinimum andMaximumValue:(float)selectedMaximum
 {
     CMTime currenTime = [self.player.currentItem currentTime];
@@ -415,6 +463,8 @@
         sender.maxLabel.string = [NSString stringWithFormat:@"%.2f",selectedMaximum];
     }
 }
+*/
+
 
 /**
  *  给变标记label的时间

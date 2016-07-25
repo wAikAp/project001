@@ -120,12 +120,14 @@
 				3C012A481D4218A000841A96 /* TXHRulerScrollView.h */,
 				3C012A491D4218A000841A96 /* TXHRulerScrollView.m */,
 			);
-			path = PrettyRulerClass;
+			name = PrettyRulerClass;
+			path = ../PrettyRulerClass;
 			sourceTree = "<group>";
 		};
 		3C4FF4CA1D35ED5200FE3FFF /* Player */ = {
 			isa = PBXGroup;
 			children = (
+				3C012A451D4218A000841A96 /* PrettyRulerClass */,
 				3CDAD88B1D389BB4003EBC68 /* NYSliderPopover */,
 				3C4FF4CB1D35ED5200FE3FFF /* SWFrame */,
 				3C4FF4CE1D35ED5200FE3FFF /* SWImagePlayer */,
@@ -191,7 +193,6 @@
 		3C5AC2A31D2F922000822DD6 /* videoZhenLv */ = {
 			isa = PBXGroup;
 			children = (
-				3C012A451D4218A000841A96 /* PrettyRulerClass */,
 				3CEB153E1D3F20A8003F2D37 /* TTRangerSlider */,
 				3CEB15371D3F1CF9003F2D37 /* ASValueTrackingSlider */,
 				3CBE488D1D3DD9C500666AEF /* Masonry */,
