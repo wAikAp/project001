@@ -30,8 +30,8 @@ const CGFloat sliderHeight = 10;
         //Default size, can be changed after
         [self addTarget:self action:@selector(updatePopoverFrame) forControlEvents:UIControlEventValueChanged];
         _popover = [[NYPopover alloc] initWithFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y - 32 - 5, 55, 32)];
-        _popover.alpha = 1;
-        
+        _popover.alpha = 0.75;
+        self.backgroundColor = [UIColor clearColor];
         _isFirstLoad = YES;
         
         [self.superview addSubview:_popover];
@@ -135,10 +135,10 @@ const CGFloat sliderHeight = 10;
 {
     if (animated) {
         [UIView animateWithDuration:0.25 animations:^{
-            self.popover.alpha = 1.0;
+            self.popover.alpha = 0.75;
         }];
     } else {
-        self.popover.alpha = 1.0;
+        self.popover.alpha = 0.75;
     }
     
 }

@@ -86,6 +86,8 @@
  */
 @property (nonatomic, assign) CGFloat playerNumber;
 
+
+@property (nonatomic, assign) BOOL playerIsFont;
 /**
  *  播放
  */

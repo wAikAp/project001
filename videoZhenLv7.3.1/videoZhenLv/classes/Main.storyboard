@@ -17,12 +17,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZCP-gf-8Xr">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZCP-gf-8Xr">
                                 <rect key="frame" x="0.0" y="64" width="414" height="306"/>
                                 <subviews>
                                     <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6bR-fs-O9d">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="306"/>
-                                        <state key="normal" title="添加视频1">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="314"/>
+                                        <state key="normal" title="Add - Video - One">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                         <connections>
@@ -39,12 +39,12 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x5h-UD-Gg2">
-                                <rect key="frame" x="0.0" y="370" width="414" height="306"/>
+                                <rect key="frame" x="0.0" y="378" width="414" height="314"/>
                                 <subviews>
                                     <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HBy-tv-iEt">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="306"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="314"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal" title="添加视频2">
+                                        <state key="normal" title="Add - Video - Two">
                                             <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                         <connections>
@@ -54,20 +54,20 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.25098040700000002" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="HBy-tv-iEt" firstAttribute="top" secondItem="x5h-UD-Gg2" secondAttribute="top" id="8gK-Ii-Y4h"/>
-                                    <constraint firstItem="HBy-tv-iEt" firstAttribute="leading" secondItem="x5h-UD-Gg2" secondAttribute="leading" id="AAh-Ru-JpQ"/>
-                                    <constraint firstAttribute="trailing" secondItem="HBy-tv-iEt" secondAttribute="trailing" id="AzF-Wn-C8W"/>
-                                    <constraint firstAttribute="bottom" secondItem="HBy-tv-iEt" secondAttribute="bottom" id="vDO-4V-CKw"/>
+                                    <constraint firstItem="HBy-tv-iEt" firstAttribute="top" secondItem="x5h-UD-Gg2" secondAttribute="top" id="0hu-iv-ILh"/>
+                                    <constraint firstAttribute="trailing" secondItem="HBy-tv-iEt" secondAttribute="trailing" id="CLe-7g-da0"/>
+                                    <constraint firstAttribute="bottom" secondItem="HBy-tv-iEt" secondAttribute="bottom" id="cLT-LQ-5u7"/>
+                                    <constraint firstItem="HBy-tv-iEt" firstAttribute="leading" secondItem="x5h-UD-Gg2" secondAttribute="leading" id="xz4-sH-63z"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="23d-Hx-jD9" userLabel="控制台">
-                                <rect key="frame" x="0.0" y="676" width="414" height="60"/>
+                                <rect key="frame" x="0.0" y="692" width="414" height="44"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R2z-CK-b7g">
-                                        <rect key="frame" x="15" y="3" width="60" height="54"/>
-                                        <color key="backgroundColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <button opaque="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R2z-CK-b7g">
+                                        <rect key="frame" x="20" y="3" width="50" height="38"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="60" id="TQf-vi-YZG"/>
+                                            <constraint firstAttribute="width" constant="50" id="wct-YZ-9sb"/>
                                         </constraints>
                                         <state key="normal" image="play"/>
                                         <state key="selected" image="pause"/>
@@ -76,46 +76,46 @@
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FA7-0o-O2M">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="58"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="R2z-CK-b7g" secondAttribute="bottom" constant="3" id="4x0-Pn-cYj"/>
-                                    <constraint firstItem="R2z-CK-b7g" firstAttribute="leading" secondItem="23d-Hx-jD9" secondAttribute="leading" constant="15" id="9Tn-ca-fq5"/>
-                                    <constraint firstAttribute="bottom" secondItem="FA7-0o-O2M" secondAttribute="bottom" constant="2" id="RNs-hy-pln"/>
-                                    <constraint firstItem="FA7-0o-O2M" firstAttribute="leading" secondItem="23d-Hx-jD9" secondAttribute="leading" id="fjD-1S-xva"/>
-                                    <constraint firstItem="R2z-CK-b7g" firstAttribute="top" secondItem="23d-Hx-jD9" secondAttribute="top" constant="3" id="hKB-Hk-eGv"/>
-                                    <constraint firstAttribute="trailing" secondItem="FA7-0o-O2M" secondAttribute="trailing" id="oKZ-gj-uwn"/>
-                                    <constraint firstItem="FA7-0o-O2M" firstAttribute="top" secondItem="23d-Hx-jD9" secondAttribute="top" id="rEL-oH-cha"/>
+                                    <constraint firstItem="R2z-CK-b7g" firstAttribute="leading" secondItem="23d-Hx-jD9" secondAttribute="leading" constant="20" id="99Z-Lq-OwZ"/>
+                                    <constraint firstItem="R2z-CK-b7g" firstAttribute="top" secondItem="23d-Hx-jD9" secondAttribute="top" constant="3" id="Im7-Ux-lZj"/>
+                                    <constraint firstItem="FA7-0o-O2M" firstAttribute="leading" secondItem="23d-Hx-jD9" secondAttribute="leading" id="UmR-ir-giG"/>
+                                    <constraint firstAttribute="height" constant="44" id="c0u-Te-dmZ"/>
+                                    <constraint firstAttribute="bottom" secondItem="FA7-0o-O2M" secondAttribute="bottom" id="cFl-TB-Il0"/>
+                                    <constraint firstAttribute="trailing" secondItem="FA7-0o-O2M" secondAttribute="trailing" id="dvo-ZF-6HO"/>
+                                    <constraint firstAttribute="bottom" secondItem="R2z-CK-b7g" secondAttribute="bottom" constant="3" id="l2a-Wy-4mq"/>
+                                    <constraint firstItem="FA7-0o-O2M" firstAttribute="top" secondItem="23d-Hx-jD9" secondAttribute="top" id="q5V-y3-6Kg"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="23d-Hx-jD9" firstAttribute="top" secondItem="x5h-UD-Gg2" secondAttribute="bottom" id="35U-xN-UMi"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="x5h-UD-Gg2" secondAttribute="bottom" constant="60" id="Crq-V0-V8J"/>
+                            <constraint firstAttribute="trailing" secondItem="23d-Hx-jD9" secondAttribute="trailing" id="DyL-k0-VuA"/>
                             <constraint firstItem="ZCP-gf-8Xr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="EE9-u0-vSx"/>
-                            <constraint firstItem="23d-Hx-jD9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="HF0-IJ-Wzl"/>
+                            <constraint firstItem="23d-Hx-jD9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="FhT-Il-Qzq"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="23d-Hx-jD9" secondAttribute="bottom" id="IQE-2I-1ig"/>
                             <constraint firstItem="x5h-UD-Gg2" firstAttribute="top" secondItem="ZCP-gf-8Xr" secondAttribute="bottom" id="Izc-vF-1Fp"/>
                             <constraint firstAttribute="trailing" secondItem="ZCP-gf-8Xr" secondAttribute="trailing" id="Y7a-l2-fJT"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="23d-Hx-jD9" secondAttribute="bottom" id="Y9m-OY-NXk"/>
                             <constraint firstItem="x5h-UD-Gg2" firstAttribute="height" secondItem="ZCP-gf-8Xr" secondAttribute="height" id="ewp-To-eg3"/>
                             <constraint firstItem="x5h-UD-Gg2" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ftm-jM-IzQ"/>
                             <constraint firstItem="ZCP-gf-8Xr" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="gGv-7w-zJA"/>
                             <constraint firstAttribute="trailing" secondItem="x5h-UD-Gg2" secondAttribute="trailing" id="iNX-Ap-O3Y"/>
-                            <constraint firstAttribute="trailing" secondItem="23d-Hx-jD9" secondAttribute="trailing" id="zvE-Ls-lRM"/>
+                            <constraint firstItem="23d-Hx-jD9" firstAttribute="top" secondItem="x5h-UD-Gg2" secondAttribute="bottom" id="wOi-Us-mmS"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Yts-5a-kB0">
                         <barButtonItem key="leftBarButtonItem" style="done" id="cIp-oU-da5">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="FkE-Ze-eEc">
-                                <rect key="frame" x="20" y="7" width="60" height="30"/>
+                                <rect key="frame" x="20" y="5" width="60" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal" title="clean">
-                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Clean">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="clickVideoBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GMr-fV-1n2"/>
@@ -151,7 +151,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OAo-bb-H8j" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-154" y="360"/>
+            <point key="canvasLocation" x="-69" y="310"/>
         </scene>
     </scenes>
     <resources>

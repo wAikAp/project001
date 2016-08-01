@@ -19,4 +19,5 @@
 
 @property (nonatomic, weak) id<SWMoveButtonDelegate> moveButtonDelegate;
 
+-(void)moveTheBtnTheXYCheak;
 @end

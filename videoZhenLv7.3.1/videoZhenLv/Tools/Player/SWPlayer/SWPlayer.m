@@ -109,14 +109,15 @@
      AVLayerVideoGravityResizeAspectFill    //  保持比例, 可能会有一不部分看不到
      AVLayerVideoGravityResize              // 填充全屏
      */
-    playerLayer.videoGravity =  AVLayerVideoGravityResizeAspect;
+    playerLayer.videoGravity =  AVLayerVideoGravityResize;
     //拿到影片长度
     double assDura  = CMTimeGetSeconds(self.player.currentItem.asset.duration);
     
     //TimeSlider
     self.timeSlider.minimumValue = 0.00;
     self.timeSlider.maximumValue = assDura;
-    //        [self.timeSlider setMinimumTrackImage:[UIImage imageNamed:@"slider"] forState:UIControlStateNormal];
+    self.timeSlider.alpha = 0.88f;
+            [self.timeSlider setMinimumTrackImage:[UIImage imageNamed:@"slider"] forState:UIControlStateNormal];
     CMTime zongT = self.player.currentItem.asset.duration;
     NSLog(@"视频总秒数 = %f —— value数 = %lld —— 每秒帧数 = %d —— 视频的总长度数 = %lld",assDura,zongT.value,zongT.timescale, zongT.value * zongT.timescale);
 }
@@ -281,6 +282,7 @@
 //                NSLog(@"向左要移动%f帧", moveZhen);
                 if (moveZhen > -0.5f) {
 //                    NSLog(@"向左改变%f",moveZhen);
+                    moveZhen -= 1;
                 }
             }
         }
@@ -483,6 +485,16 @@
 
 
 
+
+#pragma mark - Dealloc
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+    NSLog(@"SWplayer  -   dealloc");
+}
+
+
+
 #pragma mark - 自定义slider - TTRangeSliderDelegate
 /*
  -(void)rangeSlider:(TTRangeSlider *)sender didChangeSelectedMinimumValue:(float)selectedMinimum andMaximumValue:(float)selectedMaximum
@@ -564,15 +576,5 @@
  }
  }
  */
-
-
-#pragma mark - Dealloc
--(void)dealloc
-{
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
-    NSLog(@"SWplayer  -   dealloc");
-}
-
-
 
 @end
