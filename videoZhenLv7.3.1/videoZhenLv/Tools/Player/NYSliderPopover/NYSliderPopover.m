@@ -2,14 +2,10 @@
 //  NYSliderPopover.m
 //  NYReader
 //
-//  Created by Cassius Pacheco on 21/12/12.
-//  Copyright (c) 2012 Nyvra Software. All rights reserved.
-//
 
 #import "NYSliderPopover.h"
 #import "NYPopover.h"
 
-#import "Masonry.h"
 
 const CGFloat sliderHeight = 10;
 
@@ -34,7 +30,7 @@ const CGFloat sliderHeight = 10;
         self.backgroundColor = [UIColor clearColor];
         _isFirstLoad = YES;
         
-        [self.superview addSubview:_popover];
+//        [self.superview addSubview:_popover];
         [self updatePopoverFrame];
         
     }

@@ -21,8 +21,13 @@
 
 @end
 
-
+@class TXHRrettyRuler;
 @interface SWPlayer : UIView
+
+/**
+ *  tap时回调
+ */
+@property (nonatomic, copy) void (^tapPlayerBlock)();
 
 /**
  *  初始化
@@ -57,7 +62,10 @@
  *  放自定义滑条的VIew
  */
 @property (weak, nonatomic) IBOutlet UIView *rangeView;
-
+/**
+ *  尺子view
+ */
+@property (nonatomic, strong) TXHRrettyRuler *rulerView;
 /**
  *  双头自定义滑条
  */
@@ -85,8 +93,9 @@
  *  等价于tag 记录是第几个player
  */
 @property (nonatomic, assign) CGFloat playerNumber;
-
-
+/**
+ *  是否在最前
+ */
 @property (nonatomic, assign) BOOL playerIsFont;
 /**
  *  播放

@@ -108,13 +108,13 @@ CGFloat const navbarHeight = 64;
             //                NSLog(@"x小于屏幕一半");
             self.sw_x = marring;
         }
-        if (self.frame.origin.y >= SW_SCREEN_HEIGHT - navbarHeight) {//y大于屏幕
+        if (self.frame.origin.y >= SW_SCREEN_HEIGHT - self.sw_height) {//y大于屏幕
             //                NSLog(@"y大于屏幕");
             self.sw_y = SW_SCREEN_HEIGHT - self.sw_height - marring;
         }
-        if (self.frame.origin.y <= navbarHeight) {//y小于屏幕
+        if (self.frame.origin.y <= 0) {//y小于屏幕
             //                NSLog(@"y小于屏幕");
-            self.sw_y = marring + navbarHeight;
+            self.sw_y = marring + 0;
         }
     }];
 }

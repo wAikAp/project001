@@ -10,6 +10,9 @@
 
 @interface SightPlayerViewController : UIViewController
 
-
+/**
+ *  控制器释放block
+ */
+@property (nonatomic, copy) void (^deallocBlock)();
 
 @end

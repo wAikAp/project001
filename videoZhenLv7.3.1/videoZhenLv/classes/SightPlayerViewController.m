@@ -7,9 +7,17 @@
 //
 
 #import "SightPlayerViewController.h"
-#import "SWPlayer.h"
+#import "MBProgressHUD+MJ.h"
+#import "Masonry.h"
 
-@interface SightPlayerViewController ()
+
+@interface SightPlayerViewController () <UITableViewDelegate,UITableViewDataSource>
+@property (strong, nonatomic)IBOutlet UIButton *cleanBtn;
+@property (strong, nonatomic)IBOutlet UILabel *cleanLabel;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic, copy) NSString *tempPatch;
+
+@property (nonatomic, strong) NSMutableArray *fileArray;
 
 @end
 
@@ -18,12 +26,101 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    self.cleanBtn.layer.cornerRadius = self.cleanBtn.frame.size.width/2;
+    self.title = @"清除自动备份";
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"fileCell"];
+    self.fileArray = [self getTempFlies];
+    NSLog(@"文件数组 = %@",self.fileArray);
+    if (self.fileArray.count <= 0) {
+        [self.cleanBtn setTitle:@"temp没视频" forState:UIControlStateNormal];
+    }
+    self.tableView.estimatedRowHeight = 100;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (IBAction)cleanTempCaChe:(UIButton *)sender {
+    [sender setTitle:@"正在删除..." forState:UIControlStateNormal];
+    MBProgressHUD *mb = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    mb.labelText = @"正在删除...";
+    [mb showAnimated:YES whileExecutingBlock:^{
+
+        NSString *tempPatch = NSTemporaryDirectory();
+        if (self.fileArray.count > 0) {//temp里面有文件
+            for (NSString *filePatch in self.fileArray) {
+                NSLog(@"文件：%@",filePatch);
+                BOOL isRemove = [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@",tempPatch,filePatch] error:nil];
+                NSLog(@"%@",isRemove ? @"删除成功":@"删除失败");
+            }
+            [sender setTitle:@"删除完成" forState:UIControlStateNormal];
+        }else{
+            NSLog(@"temp没有视频");
+            [sender setTitle:@"temp没视频" forState:UIControlStateNormal];
+        }
+    } completionBlock:^{
+        self.fileArray = [NSMutableArray array];
+        [mb removeFromSuperViewOnHide];
+        [MBProgressHUD showSuccess:@"删除完成"];
+        [self.tableView reloadData];
+        NSLog(@"数组删除后 = %@",self.fileArray);
+    }];
+    
 }
 
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.fileArray.count > 0 ? self.fileArray.count : 0;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"fileCell" forIndexPath:indexPath];
+    cell.textLabel.numberOfLines = 0;
+    CGFloat size = [self fileSizeAtPath:[NSString stringWithFormat:@"%@/%@",self.tempPatch,self.fileArray[indexPath.row]]];
+    cell.textLabel.text = [NSString stringWithFormat:@"文件 ： %@ \n大小 ： %.2fMB",self.fileArray[indexPath.row],size];
+    return cell;
+}
+
+/**
+ *  获取temp中的文件
+ *
+ *  @return temp所有文件
+ */
+-(NSMutableArray *)getTempFlies {
+    
+    NSString *tempPatch = NSTemporaryDirectory();
+    self.tempPatch = tempPatch;
+    NSLog(@"TEMPpatch = %@",tempPatch);
+    NSFileManager *fliemanager = [NSFileManager defaultManager];
+    BOOL isHave = [fliemanager fileExistsAtPath:tempPatch];
+    if (isHave) {
+        NSArray *flieArr = [fliemanager contentsOfDirectoryAtPath:tempPatch error:nil];
+        return [flieArr copy];
+    }else
+    {
+        NSLog(@"没有temp");
+        return nil;
+    }
+}
+
+/**
+ *  获取单个文件的大小
+ */
+- (CGFloat) fileSizeAtPath:(NSString*) filePath{
+    
+    NSFileManager* manager = [NSFileManager defaultManager];
+    
+    if ([manager fileExistsAtPath:filePath]){
+        
+        return [[manager attributesOfItemAtPath:filePath error:nil] fileSize]/(1024.0*1024.0);//mb
+    }
+    return 0;
+}
+
+-(void)dealloc
+{
+    if (self.deallocBlock) {
+        self.deallocBlock();
+    }
+    NSLog(@"SightPlayerViewControllerGG");
+}
 
 @end

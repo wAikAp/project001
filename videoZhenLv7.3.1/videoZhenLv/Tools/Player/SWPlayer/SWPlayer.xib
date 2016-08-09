@@ -11,30 +11,6 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yqw-XX-JkC">
-                    <rect key="frame" x="10" y="370" width="50" height="50"/>
-                    <color key="backgroundColor" red="0.50196081400000003" green="0.50196081400000003" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="50" id="U1O-1G-tjn"/>
-                        <constraint firstAttribute="height" constant="50" id="ngj-Sn-As1"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                    <state key="normal" image="play">
-                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                        <color key="titleShadowColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    </state>
-                    <state key="selected" image="pause"/>
-                    <connections>
-                        <action selector="playBtnCilck:" destination="iN0-l3-epB" eventType="touchUpInside" id="XMR-9h-fbc"/>
-                    </connections>
-                </button>
-                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c3P-Ng-UKe">
-                    <rect key="frame" x="10" y="20" width="300" height="20"/>
-                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
                 <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3YF-he-cUo" userLabel="RangeView">
                     <rect key="frame" x="10" y="440" width="300" height="29"/>
                     <subviews>
@@ -51,43 +27,55 @@
                         <constraint firstItem="F0M-La-pdQ" firstAttribute="leading" secondItem="3YF-he-cUo" secondAttribute="leading" id="XfB-Gc-tFc"/>
                     </constraints>
                 </view>
-                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="1s0-BW-Ic0" customClass="NYSliderPopover">
-                    <rect key="frame" x="8" y="440" width="294" height="31"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <color key="minimumTrackTintColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
-                    <color key="maximumTrackTintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <connections>
-                        <action selector="slideDidTouchUP:" destination="iN0-l3-epB" eventType="touchUpInside" id="QId-hc-9r7"/>
-                        <action selector="timeSliderValueChange:" destination="iN0-l3-epB" eventType="valueChanged" id="Dce-xM-Tvg"/>
-                    </connections>
-                </slider>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c3P-Ng-UKe">
+                    <rect key="frame" x="10" y="20" width="300" height="20"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n11-Ej-Nip">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="65"/>
                     <subviews>
+                        <button opaque="NO" alpha="0.55000000000000004" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VXF-UD-oyi">
+                            <rect key="frame" x="15" y="15" width="65" height="30"/>
+                            <color key="backgroundColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="65" id="239-Wp-EWr"/>
+                                <constraint firstAttribute="height" constant="30" id="SRR-EG-37g"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
+                            <state key="normal" title="开始时间">
+                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="clockBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="WWt-QR-oxc"/>
+                            </connections>
+                        </button>
                         <button opaque="NO" alpha="0.55000000000000004" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EzS-Ly-8GK">
-                            <rect key="frame" x="90" y="15" width="60" height="28"/>
+                            <rect key="frame" x="95" y="15" width="65" height="30"/>
                             <color key="backgroundColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
-                            <state key="normal" title="00.00">
+                            <state key="normal" title="结束时间">
                                 <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <connections>
-                                <action selector="clockBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="sTk-49-HFL"/>
+                                <action selector="endTimeBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="yez-jQ-9KQ"/>
                             </connections>
                         </button>
-                        <button opaque="NO" alpha="0.55000000000000004" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W20-uF-WWL">
-                            <rect key="frame" x="165" y="15" width="60" height="28"/>
+                        <button opaque="NO" alpha="0.55000000000000004" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W20-uF-WWL">
+                            <rect key="frame" x="175" y="15" width="65" height="30"/>
                             <color key="backgroundColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
-                            <state key="normal" title="00.00">
+                            <state key="normal" title="时差">
                                 <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <connections>
-                                <action selector="clockBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="2AB-Yh-2hg"/>
+                                <action selector="reSetTime:" destination="iN0-l3-epB" eventType="touchUpInside" id="KfJ-JM-40j"/>
                             </connections>
                         </button>
-                        <button opaque="NO" alpha="0.55000000000000004" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vrd-is-asb">
-                            <rect key="frame" x="240" y="15" width="60" height="28"/>
+                        <button hidden="YES" opaque="NO" alpha="0.55000000000000004" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vrd-is-asb">
+                            <rect key="frame" x="255" y="15" width="65" height="30"/>
                             <color key="backgroundColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                             <state key="normal" title="00.00">
@@ -95,20 +83,6 @@
                             </state>
                             <connections>
                                 <action selector="clockBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="BSc-20-QDd"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" alpha="0.55000000000000004" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VXF-UD-oyi">
-                            <rect key="frame" x="15" y="15" width="60" height="28"/>
-                            <color key="backgroundColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="60" id="239-Wp-EWr"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
-                            <state key="normal" title="00.00">
-                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            </state>
-                            <connections>
-                                <action selector="clockBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="WWt-QR-oxc"/>
                             </connections>
                         </button>
                     </subviews>
@@ -131,24 +105,59 @@
                         <constraint firstItem="EzS-Ly-8GK" firstAttribute="top" secondItem="VXF-UD-oyi" secondAttribute="top" id="vaJ-kt-Fcp"/>
                     </constraints>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eMS-kA-eyD">
+                    <rect key="frame" x="0.0" y="436" width="320" height="44"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="pnz-H6-IWy"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yqw-XX-JkC">
+                    <rect key="frame" x="8" y="391" width="60" height="30"/>
+                    <color key="backgroundColor" red="0.50196081400000003" green="0.50196081400000003" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="60" id="9rx-T9-OzE"/>
+                        <constraint firstAttribute="height" constant="30" id="NOz-aT-7be"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <state key="normal">
+                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleShadowColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="playBtnCilck:" destination="iN0-l3-epB" eventType="touchUpInside" id="XMR-9h-fbc"/>
+                    </connections>
+                </button>
+                <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="1s0-BW-Ic0" customClass="NYSliderPopover">
+                    <rect key="frame" x="74" y="402" width="206" height="31"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <color key="minimumTrackTintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="maximumTrackTintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <action selector="timeSliderValueChange:" destination="iN0-l3-epB" eventType="valueChanged" id="Dce-xM-Tvg"/>
+                    </connections>
+                </slider>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="yqw-XX-JkC" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="0nk-dC-9hT"/>
                 <constraint firstItem="c3P-Ng-UKe" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="2yd-nk-dJq"/>
                 <constraint firstItem="n11-Ej-Nip" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="8M7-OR-JgR"/>
-                <constraint firstAttribute="trailing" secondItem="1s0-BW-Ic0" secondAttribute="trailing" constant="20" id="AJq-wU-TJQ"/>
+                <constraint firstAttribute="trailing" secondItem="1s0-BW-Ic0" secondAttribute="trailing" constant="40" id="AJq-wU-TJQ"/>
+                <constraint firstItem="eMS-kA-eyD" firstAttribute="top" secondItem="1s0-BW-Ic0" secondAttribute="bottom" constant="2" id="AU1-Zf-1Po"/>
                 <constraint firstItem="c3P-Ng-UKe" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="BNf-Tz-vla"/>
                 <constraint firstAttribute="bottom" secondItem="3YF-he-cUo" secondAttribute="bottom" constant="11" id="GYB-J0-twW"/>
                 <constraint firstAttribute="trailing" secondItem="c3P-Ng-UKe" secondAttribute="trailing" constant="10" id="MNK-tz-GdZ"/>
+                <constraint firstAttribute="bottom" secondItem="eMS-kA-eyD" secondAttribute="bottom" id="SoW-Qg-fmO"/>
                 <constraint firstAttribute="trailing" secondItem="n11-Ej-Nip" secondAttribute="trailing" id="YHl-f8-LrY"/>
+                <constraint firstItem="eMS-kA-eyD" firstAttribute="top" secondItem="yqw-XX-JkC" secondAttribute="bottom" constant="15" id="dJ2-8c-2Y0"/>
+                <constraint firstAttribute="trailing" secondItem="eMS-kA-eyD" secondAttribute="trailing" id="dTv-fz-Lkg"/>
                 <constraint firstItem="yqw-XX-JkC" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="gOe-TI-cKA"/>
+                <constraint firstItem="1s0-BW-Ic0" firstAttribute="leading" secondItem="yqw-XX-JkC" secondAttribute="trailing" constant="10" id="h0J-39-9Xt"/>
                 <constraint firstAttribute="bottom" secondItem="1s0-BW-Ic0" secondAttribute="bottom" constant="35" id="hLP-rs-JVV"/>
                 <constraint firstItem="n11-Ej-Nip" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="oT7-gV-wca"/>
-                <constraint firstAttribute="bottom" secondItem="1s0-BW-Ic0" secondAttribute="bottom" constant="10" id="s2T-Wf-RPu"/>
+                <constraint firstItem="eMS-kA-eyD" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="sQs-xt-ch6"/>
                 <constraint firstAttribute="trailing" secondItem="1s0-BW-Ic0" secondAttribute="trailing" constant="20" id="vdB-2Y-TUR"/>
-                <constraint firstItem="1s0-BW-Ic0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="wGv-3f-WWx"/>
-                <constraint firstItem="1s0-BW-Ic0" firstAttribute="top" secondItem="yqw-XX-JkC" secondAttribute="bottom" constant="20" id="wHo-z4-fDB"/>
-                <constraint firstItem="yqw-XX-JkC" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="xM4-LY-1c8"/>
                 <constraint firstItem="3YF-he-cUo" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="xeK-gC-3dN"/>
                 <constraint firstAttribute="trailing" secondItem="3YF-he-cUo" secondAttribute="trailing" constant="10" id="z60-NK-kjv"/>
             </constraints>
@@ -167,6 +176,7 @@
                 </mask>
             </variation>
             <connections>
+                <outlet property="chiZiView" destination="eMS-kA-eyD" id="QKV-2h-WQQ"/>
                 <outlet property="clockBtn1" destination="VXF-UD-oyi" id="6Zv-h9-vjh"/>
                 <outlet property="clockBtn2" destination="EzS-Ly-8GK" id="sbN-fX-Rvy"/>
                 <outlet property="clockBtn3" destination="W20-uF-WWL" id="dv5-Hz-nMO"/>
@@ -181,8 +191,4 @@
             <point key="canvasLocation" x="266" y="148"/>
         </view>
     </objects>
-    <resources>
-        <image name="pause" width="12" height="19"/>
-        <image name="play" width="18" height="20"/>
-    </resources>
 </document>
