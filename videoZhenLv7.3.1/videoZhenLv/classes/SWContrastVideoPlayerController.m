@@ -4,7 +4,7 @@
 //
 //  Created by shingwai chan on 16/7/8.
 //  Copyright © 2016年 ShingWai帅威. All rights reserved.
-//
+
 
 //my self
 #import "SWContrastVideoPlayerController.h"
@@ -106,9 +106,13 @@ const float animationSec = 0.15f;//按钮动画时间
  *  是否横屏状态 yes为是
  */
 @property (nonatomic, assign) BOOL isLandscapeLeftOrRight;
-
+/**
+ *  偏移按钮
+ */
 @property (nonatomic, strong) UIButton *pianYiBtn;
-
+/**
+ *  是否偏移
+ */
 @property (nonatomic, assign) BOOL isPianYi;
 
 @end
@@ -131,28 +135,18 @@ const float animationSec = 0.15f;//按钮动画时间
     [self setUpNotifcation];
     
     self.vcToolView.hidden = YES;
+    self.pianYiBtn.hidden = YES;
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"will Appear");
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    NSLog(@"will Disapepra");
     [self hiddenPOPButton:YES];
-}
-
-#pragma mark - setUp监听
--(void)setUpNotifcation
-{
-    //监听旋转
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarOrientationChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
-    //进入后台监听
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillInBackGround:) name:UIApplicationWillResignActiveNotification object:nil];
 }
 
 
@@ -170,6 +164,16 @@ const float animationSec = 0.15f;//按钮动画时间
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [self.navigationController.navigationBar setBackgroundColor:[UIColor blackColor]];
 }
+
+#pragma mark - setUp监听
+-(void)setUpNotifcation
+{
+    //监听旋转
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarOrientationChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+    //进入后台监听
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillInBackGround:) name:UIApplicationWillResignActiveNotification object:nil];
+}
+
 
 /**
  *  叠合状态下显示当前时间
@@ -251,6 +255,8 @@ const float animationSec = 0.15f;//按钮动画时间
     //pop按钮
     [self setPopSubButton];
 }
+
+
 /**
  *  叠合子按钮
  */
@@ -259,7 +265,7 @@ const float animationSec = 0.15f;//按钮动画时间
     UIButton *pop1Btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [pop1Btn setTitle:@"叠合" forState:UIControlStateNormal];
     pop1Btn.selected = YES;
-    pop1Btn.backgroundColor = [UIColor redColor];
+//    pop1Btn.backgroundColor = [UIColor redColor];
     pop1Btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     [pop1Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     pop1Btn.layer.cornerRadius = 15;
@@ -272,7 +278,7 @@ const float animationSec = 0.15f;//按钮动画时间
     
     UIButton *pop2Btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [pop2Btn setTitle:@"Video1" forState:UIControlStateNormal];
-    pop2Btn.backgroundColor = [UIColor blueColor];
+//    pop2Btn.backgroundColor = [UIColor blueColor];
     [pop2Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     pop2Btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     pop2Btn.layer.cornerRadius = 15;
@@ -286,7 +292,7 @@ const float animationSec = 0.15f;//按钮动画时间
     UIButton *pop3Btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [pop3Btn setTitle:@"Video2" forState:UIControlStateNormal];
     [pop3Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    pop3Btn.backgroundColor = [UIColor whiteColor];
+//    pop3Btn.backgroundColor = [UIColor whiteColor];
     pop3Btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     pop3Btn.layer.cornerRadius = 15;
     pop3Btn.layer.masksToBounds = YES;
@@ -402,13 +408,12 @@ const float animationSec = 0.15f;//按钮动画时间
  */
 -(void)hiddenPopBtnAndToolViewWithPlayer:(SWPlayer *)player
 {
-    NSLog(@"hidden");
     [UIView animateWithDuration:0.25 animations:^{
         player.alpha = 0.3f;
     }completion:^(BOOL finished) {
         [player removeFromSuperview];
         if (self.player1 == nil && self.player2 == nil) {
-            NSLog(@"来了吗");
+        
             [UIView animateWithDuration:0.25 animations:^{
                 self.topRightBtn.alpha = 0.0f;
                 self.pop1Btn.alpha = 0.0f;
@@ -482,12 +487,12 @@ const float animationSec = 0.15f;//按钮动画时间
         }];
         
         [player1 setTapPlayerBlock:^{//tap回调
-            [self closeMoveBtn:self.topRightBtn];
+            [weakSelf closeMoveBtn:weakSelf.topRightBtn];
         }];
         
         player1.translatesAutoresizingMaskIntoConstraints = NO;
         [player1 mas_makeConstraints:^(MASConstraintMaker *make) {//约束
-            make.top.leading.bottom.trailing.mas_equalTo(self.player1View);
+            make.top.leading.bottom.trailing.mas_equalTo(weakSelf.player1View);
         }];
         
     }else if (self.player2 == nil && self.whichBtnNum == 2) {//player2
@@ -501,12 +506,12 @@ const float animationSec = 0.15f;//按钮动画时间
         }];
         
         [player2 setTapPlayerBlock:^{//tap回调
-            [self closeMoveBtn:self.topRightBtn];
+            [weakSelf closeMoveBtn:weakSelf.topRightBtn];
         }];
         
         player2.translatesAutoresizingMaskIntoConstraints = NO;
         [player2 mas_makeConstraints:^(MASConstraintMaker *make) {//约束
-            make.top.bottom.leading.trailing.mas_equalTo(self.player2View);
+            make.top.bottom.leading.trailing.mas_equalTo(weakSelf.player2View);
         }];
     }
     
@@ -601,17 +606,21 @@ const float animationSec = 0.15f;//按钮动画时间
 #pragma mark - 偏移点击
 -(void)pianYiDidClick:(UIButton *)pianYiBtn
 {
+    if (self.player1 == nil && self.player2 == nil) {
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
     if (_isPianYi) {
         _isPianYi = NO;
         [self.player2 mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.leading.top.trailing.bottom.mas_equalTo(self.view);
+            make.leading.top.trailing.bottom.mas_equalTo(weakSelf.view);
         }];
         
     }else{
         _isPianYi = YES;
         [self.player2 mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.bottom.mas_equalTo(self.view);
-            make.trailing.leading.mas_equalTo(self.view).mas_offset(30);
+            make.top.bottom.mas_equalTo(weakSelf.view);
+            make.trailing.leading.mas_equalTo(weakSelf.view).mas_offset(30);
         }];
     }
 }
@@ -799,6 +808,13 @@ const float animationSec = 0.15f;//按钮动画时间
 }
 
 
+- (IBAction)capScreenImage:(UIButton *)sender {
+    UIImage *image = [self screenView:self.view];
+    NSLog(@"%@",image);
+    UIImageView *imageView = [[UIImageView alloc]initWithImage:image];
+    imageView.frame = self.view.frame;
+    [self.view addSubview:imageView];
+}
 #pragma mark - 跳转触发
 /**
  *  跳转触发
@@ -811,11 +827,12 @@ const float animationSec = 0.15f;//按钮动画时间
         [self hiddenPOPButton:YES];
         //下个控制器释放回调
         SightPlayerViewController *sightVC  = (SightPlayerViewController *)segue.destinationViewController;
+        __weak typeof(self) weakSelf = self;
         [sightVC setDeallocBlock:^{
-            if (self.player1==nil && self.player2 == nil) {
+            if (weakSelf.player1==nil && weakSelf.player2 == nil) {
                 return ;
             }
-            [self hiddenPOPButton:NO];
+            [weakSelf hiddenPOPButton:NO];
         }];
         
     }
@@ -912,7 +929,7 @@ const float animationSec = 0.15f;//按钮动画时间
     }
 
     if (_isDoubleSreen == NO) {
-        NSLog(@"叠合状态");
+//        NSLog(@"叠合状态");
         //叠合状态下就显示分屏
         [self.pop1Btn setTitle:@"分屏" forState:UIControlStateNormal];
         _isDoubleSreen = YES;
@@ -945,7 +962,7 @@ const float animationSec = 0.15f;//按钮动画时间
             self.video1Label.text = [NSString stringWithFormat:@"底视频ONE : 0%.2f",self.player1.timeSlider.value];
             self.video2Label.text = [NSString stringWithFormat:@"底视频TWO : 0%.2f",self.player2.timeSlider.value];
             self.labelView.alpha = 1;
-            self.player2.alpha = 0.5f;
+            self.player2.alpha = 0.66f;
             [self hiddenPlayerSubViewsPlayer:self.player1 hiddenSubViews:YES];
             [self hiddenPlayerSubViewsPlayer:self.player2 hiddenSubViews:YES];
             
@@ -954,7 +971,7 @@ const float animationSec = 0.15f;//按钮动画时间
             self.player1.backgroundColor = [UIColor blackColor];
         }];
     }else{//一个按钮2件事情处理
-        NSLog(@"不是full");
+//        NSLog(@"不是full");
         //分屏状态下
         [self.pop1Btn setTitle:@"叠合" forState:UIControlStateNormal];
         if (_isLandscapeLeftOrRight == NO) {//横屏状态的话
@@ -1014,9 +1031,6 @@ const float animationSec = 0.15f;//按钮动画时间
 #pragma mark - 监听旋转
 - (void)statusBarOrientationChange:(NSNotification *)notification
 {
-//    [self.player1.timeSlider hidePopover];
-//    [self.player2.timeSlider hidePopover];
-//    
     //cheak X和Y
     [self.topRightBtn moveTheBtnTheXYCheak];
     [self closeMoveBtn:self.topRightBtn];
@@ -1072,6 +1086,30 @@ const float animationSec = 0.15f;//按钮动画时间
         [self.player2 pause];
     }
     self.vcPlayBtn.selected = NO;
+}
+
+/**
+ *  截屏
+ */
+- (UIImage*)screenView:(UIView *)view{
+//    CGRect rect = view.frame;
+//    UIGraphicsBeginImageContext(rect.size);
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+//    [view.layer renderInContext:context];
+////    [self.navigationController.view.layer renderInContext:context];
+////    [[UIApplication sharedApplication].keyWindow.layer renderInContext:context];
+//    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    return img;
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size,YES,0);
+    
+//    [view drawHierarchyInRect:view.bounds afterScreenUpdates:YES];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    return image;
 }
 
 #pragma mark - dealloc

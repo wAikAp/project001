@@ -17,7 +17,7 @@
 #import "MBProgressHUD+MJ.h"
 
 const NSInteger playerMaxRulerValue = 2222;//尺子长度
-const CGFloat subViewAlpht = 0.55f;
+const CGFloat subViewAlpht = 1.0f;//透明度
 
 @interface SWPlayer() <TXHRrettyRulerDelegate>//<TTRangeSliderDelegate>
 
@@ -89,6 +89,14 @@ const CGFloat subViewAlpht = 0.55f;
  *  手势移动的x
  */
 @property (nonatomic, assign) CGFloat panX;
+/**
+ *  是否拖动
+ */
+@property (nonatomic, assign) BOOL isPaning;
+/**
+ *  秒/帧数
+ */
+@property (nonatomic, assign) int videoZhen;
 
 @end
 
@@ -99,13 +107,12 @@ const CGFloat subViewAlpht = 0.55f;
 -(instancetype)initWithFrame:(CGRect)frame vidoURLStr:(NSURL *)urlStr
 {
     if (self = [super init]) {
-//        NSLog(@"init - %@",self);
+
         self = [[[UINib nibWithNibName:NSStringFromClass(self.class) bundle:nil] instantiateWithOwner:nil options:nil]lastObject];
         self.frame = frame;
         self.backgroundColor = [UIColor blackColor];
         //设置player
         [self setUPplayerWithUrl:urlStr];
-        
         //range Slider
         [self setUpRangeSlider];
         //UI细节
@@ -124,6 +131,8 @@ const CGFloat subViewAlpht = 0.55f;
     AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
     AVPlayer *player = [AVPlayer playerWithPlayerItem:item];
     self.player = player;
+    //    rate能调播放数度
+    //    player.rate = 0.5;
     
     //layer
     AVPlayerLayer* playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
@@ -145,19 +154,11 @@ const CGFloat subViewAlpht = 0.55f;
     self.timeSlider.maximumValue = assDura;
     CMTime zongT = self.player.currentItem.asset.duration;
     NSLog(@"视频总秒数 = %f —— value数 = %lld —— 每秒帧数 = %d —— 视频的总长度数 = %lld",assDura,zongT.value,zongT.timescale, zongT.value * zongT.timescale);
-}
-
-#pragma mark - setUp监听手势
--(void)setUpNotifction
-{
-    //添加手势
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playerDidTap:)];
-    tap.numberOfTapsRequired = 1;
-    [self addGestureRecognizer:tap];
-    
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panThePlayer:)];
-
-    [self addGestureRecognizer:pan];
+    self.videoZhen = zongT.timescale;
+    //监听player状态
+    //    [self.player.currentItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+    //每一秒回调一次 ， 拖动就会调用
+//    [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:NULL usingBlock:^(CMTime time) {}];
 }
 
 #pragma mark - setUpUI
@@ -192,6 +193,9 @@ const CGFloat subViewAlpht = 0.55f;
 
     self.timeSlider.alpha = subViewAlpht;
     self.playBtn.alpha = subViewAlpht;
+    self.clockBtn1.alpha = subViewAlpht;
+    self.clockBtn2.alpha = subViewAlpht;
+    self.clockBtn3.alpha = subViewAlpht;
     //图层移动
     [self bringSubviewToFront:self.playBtn];
     [self bringSubviewToFront:self.timeSlider];
@@ -200,7 +204,6 @@ const CGFloat subViewAlpht = 0.55f;
     [self bringSubviewToFront:self.clockView];
 }
 
-
 /**
  *  设置View圆角
  */
@@ -208,6 +211,20 @@ const CGFloat subViewAlpht = 0.55f;
     view.layer.cornerRadius = cornerRadius;
     view.layer.masksToBounds = YES;
 }
+
+#pragma mark - setUp监听手势
+-(void)setUpNotifction
+{
+    //添加手势
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playerDidTap:)];
+    tap.numberOfTapsRequired = 1;
+    [self addGestureRecognizer:tap];
+    
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panThePlayer:)];
+    
+    [self addGestureRecognizer:pan];
+}
+
 
 #pragma mark - 尺子移动
 - (void)txhRrettyRuler:(TXHRulerScrollView *)rulerScrollView
@@ -229,11 +246,6 @@ const CGFloat subViewAlpht = 0.55f;
         
     }else if (rulerScrollView.rulerValue < self.rulerValue) {//向右拖 数值减少
         [self stepByCount: -1];
-        self.rulerValue = rulerScrollView.rulerValue;
-    }else
-    {
-        NSLog(@"0");
-        [self stepByCount:0];
         self.rulerValue = rulerScrollView.rulerValue;
     }
     [self.playBtn setImage:nil forState:UIControlStateNormal];
@@ -283,12 +295,13 @@ const CGFloat subViewAlpht = 0.55f;
 -(void)panThePlayer:(UIPanGestureRecognizer *)pan
 {
     if (pan.state == UIGestureRecognizerStateBegan) {
-        NSLog(@"began");
+//        NSLog(@"began");
     }
     
     //当值改变时才改变帧数
     if (pan.state == UIGestureRecognizerStateChanged) {
-        NSLog(@"change");
+//        NSLog(@"change");
+        _isPaning = YES;
         //移动的x
         CGPoint translatedPoint = [pan translationInView:self];
         
@@ -300,11 +313,11 @@ const CGFloat subViewAlpht = 0.55f;
             [self stepByCount:-1];
         }
         _panX = translatedPoint.x;
-        
     }
     
     if (pan.state == UIGestureRecognizerStateEnded) {
-        NSLog(@"end");
+//        NSLog(@"end");
+        _isPaning = NO;
     }
 }
 
@@ -314,9 +327,24 @@ const CGFloat subViewAlpht = 0.55f;
  */
 -(void)notifPlayTime
 {
+    CMTime time = [self.player.currentItem currentTime];
+    CGFloat currentSec = (CGFloat)(time.value *1.0f / time.timescale);
+    
+    if (currentSec >= self.endTime && self.endTime != 0) {//播放到结束时间后
+        [self pause];//暂停
+        [self updateSliderPopoverTextCurreSec:self.endTime];
+        //更新时间代理
+        if ([self.playerDelegate respondsToSelector:@selector(player:NotifCurrTimes:)]) {
+            [self.playerDelegate player:self NotifCurrTimes:self.endTime];
+        }
+        if (self.playerDidPlayFinish) {//播放完成
+            self.playerDidPlayFinish();//回调控制器
+        }
+        return;
+    }
     //播完
     if (self.timeSlider.value == self.timeSlider.maximumValue) {
-        self.player.rate = 0;//
+//        self.player.rate = 0;//
         [self.timer invalidate];//停止timer的监听
         self.timer = nil;//timer指向nil
         self.playBtn.selected = NO;
@@ -326,16 +354,15 @@ const CGFloat subViewAlpht = 0.55f;
         }
     }
     
-    CMTime time = [self.player.currentItem currentTime];
-    CGFloat currentSec = (CGFloat)(time.value *1.0f / time.timescale);
     self.sliderValue = self.timeSlider.value = currentSec;
-    NSLog(@"播放ing 进度条 = %f currentSEc = %f",self.sliderValue,currentSec);
+//    NSLog(@"播放ing 进度条 = %f currentSEc = %f",self.sliderValue,currentSec);
     //更新进度条
     [self updateSliderPopoverTextCurreSec:currentSec];
     //触发代理
     if ([self.playerDelegate respondsToSelector:@selector(player:NotifCurrTimes:)]) {
         [self.playerDelegate player:self NotifCurrTimes:currentSec];
     }
+
     
 }
 
@@ -345,20 +372,27 @@ const CGFloat subViewAlpht = 0.55f;
  */
 -(void)stepByCount:(CGFloat)count
 {
+    _playFinish = NO;
     [self pause];
     //当前时间
     CMTime time = [self.player.currentItem currentTime];
     CGFloat currentSec = (CGFloat)(time.value *1.0f / time.timescale);
     
-    if (currentSec >= self.endTime && self.endTime != 0 && count > 0) {//限制不能快进
+    if (currentSec >= self.endTime && self.endTime != 0 && count > 0 && _isPaning == NO) {//限制不能快进
         NSLog(@"到达endTime");
-        [self updateSliderPopoverTextCurreSec:currentSec];
+        [self updateSliderPopoverTextCurreSec:self.endTime];
+        if ([self.playerDelegate respondsToSelector:@selector(player:NotifCurrTimes:)]) {
+            [self.playerDelegate player:self NotifCurrTimes:self.endTime];
+        }
         return;
     }
     
-    if (currentSec <= self.startTime && self.startTime != 0 && count < 0) {//不能后退
+    if (currentSec <= self.startTime && self.startTime != 0 && count < 0 && _isPaning == NO) {//不能后退
         NSLog(@"到达startTime");
-        [self updateSliderPopoverTextCurreSec:currentSec];
+        [self updateSliderPopoverTextCurreSec:self.startTime];
+        if ([self.playerDelegate respondsToSelector:@selector(player:NotifCurrTimes:)]) {
+            [self.playerDelegate player:self NotifCurrTimes:self.startTime];
+        }
         return;
     }
     
@@ -383,6 +417,7 @@ const CGFloat subViewAlpht = 0.55f;
  */
 - (IBAction)timeSliderValueChange:(UISlider *)sender {
     //注销timer
+    _playFinish = NO;
     [self.timer invalidate];
     self.timer = nil;
     self.playBtn.selected = NO;
@@ -394,7 +429,7 @@ const CGFloat subViewAlpht = 0.55f;
     float videoCurreSec = (CGFloat)currenTime.value/currenTime.timescale;
     //改变的秒数 现在的value - 现在的秒数
     float sliderValueChange = sender.value - self.sliderValue;
-    NSLog(@"相差 = %f",sliderValueChange);
+//    NSLog(@"相差 = %f",sliderValueChange);
     //改变的值向右拖时如果比0.1秒小 就会没反应
     if (sliderValueChange <0.1f && sliderValueChange > 0) {
         sliderValueChange = 0.1f;
@@ -422,11 +457,12 @@ const CGFloat subViewAlpht = 0.55f;
         }
     }
     //利用 AVPlayerItem  stepByCount的方法能做到帧播放效果 移动多少帧率
-    NSLog(@"要移动%f帧",moveZhen);
+//    NSLog(@"要移动%f帧",moveZhen);
     //移动帧
     [self.player.currentItem stepByCount:moveZhen];
     sender.value = videoCurreSec;
     [self updateSliderPopoverTextCurreSec:videoCurreSec];
+    NSLog(@"拖动的时间 = %f 进度条时间 = %f",videoCurreSec,sender.value);
 }
 
 #pragma mark - 点击事件
@@ -443,7 +479,6 @@ const CGFloat subViewAlpht = 0.55f;
     }
 }
 
-#pragma mark - 标记时间事件
 //计算相差
 - (IBAction)reSetTime:(UIButton *)sender {
     CGFloat diffNum = self.endTime - self.startTime;
@@ -453,11 +488,16 @@ const CGFloat subViewAlpht = 0.55f;
 #pragma mark - 标记结束时间
 - (IBAction)endTimeBtnClick:(UIButton *)sender {
     
+    if (self.endTime != 0) {//再点一次就重置结束值
+        [sender setTitle:@"结束时间" forState:UIControlStateNormal];
+        self.endTime = 0;
+        return;
+    }
+    
     self.endTime = self.timeSlider.value;
-//    NSLog(@"end time = %f",self.endTime);
-    if (self.endTime <= self.startTime) {
+    if (self.endTime <= self.startTime) {//记录结束值
         [MBProgressHUD show:@"结束时间不能少于或等于开始时间" icon:@"error" view:self];
-        
+        [sender setTitle:@"Error" forState:UIControlStateNormal];
         if (self.endTime == 0) {
             [MBProgressHUD show:@"结束时间不能为0" icon:@"error" view:self];
         }
@@ -467,23 +507,30 @@ const CGFloat subViewAlpht = 0.55f;
         }else{
             [sender setTitle:[NSString stringWithFormat:@"%.2f",self.timeSlider.value] forState:UIControlStateNormal];
         }
+        [self.clockBtn3 setTitle:[NSString stringWithFormat:@"%.2f",self.endTime - self.startTime] forState:UIControlStateNormal];
     }
     
 }
-
+#pragma mark - 标记开始时间
 /**
  *  标记开始时间
  *
  */
 - (IBAction)clockBtnClick:(UIButton *)sender {
 
+    if (self.startTime != 0) {//再点一次就重置开始值
+        [sender setTitle:@"开始时间" forState:UIControlStateNormal];
+        self.startTime = 0;
+        return;
+    }
     self.startTime = self.timeSlider.value;
-//    NSLog(@"start time = %f",self.startTime);
-
     if (self.timeSlider.value < 10) {
         [sender setTitle:[NSString stringWithFormat:@"0%.2f",self.timeSlider.value] forState:UIControlStateNormal];
     }else{
         [sender setTitle:[NSString stringWithFormat:@"%.2f",self.timeSlider.value] forState:UIControlStateNormal];
+    }
+    if (self.endTime != 0) {
+        [self.clockBtn3 setTitle:[NSString stringWithFormat:@"%.2f",self.endTime - self.startTime] forState:UIControlStateNormal];
     }
 }
 
@@ -495,31 +542,43 @@ const CGFloat subViewAlpht = 0.55f;
 -(void)play {
     
     [self.playBtn setImage:nil forState:UIControlStateNormal];
+    CMTime time = [self.player.currentItem currentTime];
+    CGFloat currentSec = (CGFloat)(time.value *1.0f / time.timescale);
     
     if (_playFinish) {//先判断是否播完 播完就重新开始
         [self.player seekToTime:CMTimeMake(0, 1)];
-        self.timeSlider.value = 0;
+        self.sliderValue = self.timeSlider.value = 0;
+        _playFinish = NO;
     }
-    _playFinish = NO;
+    else if (currentSec >= self.endTime && self.endTime != 0){//如果结束了再点播放
+        //重开始时间开始播
+        __weak typeof(self) weakSelf = self;
+        [self.player seekToTime:CMTimeMake(self.startTime*self.videoZhen, self.videoZhen)toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+            [weakSelf pause];
+            weakSelf.sliderValue = weakSelf.timeSlider.value = weakSelf.startTime;
+            [weakSelf updateSliderPopoverTextCurreSec:weakSelf.startTime];
+            if (weakSelf.playerDidPlayFinish) {
+                weakSelf.playerDidPlayFinish();
+            }
+            return ;
+        }];
+    }
     [self.player play];
     self.isPlaying = self.playBtn.selected = YES;
     [self createTimer];
-    if (self.timeSlider.hidden == NO) {
-        [self.timeSlider showPopoverAnimated:YES];
-    }
 }
 /**
  *  暂停
  */
 -(void)pause
 {
-    self.playBtn.selected = NO;
     [self.player pause];
+    self.playBtn.selected = NO;
     [self.timer invalidate];
     self.timer = nil;
 }
 
-#pragma mark - timer
+#pragma mark - timer监听
 /**
  *  创建时间加到runLoop
  *
@@ -528,7 +587,7 @@ const CGFloat subViewAlpht = 0.55f;
 -(NSTimer *)createTimer
 {
     
-    NSTimer *timer =  [NSTimer scheduledTimerWithTimeInterval:0.10f target:self selector:@selector(notifPlayTime) userInfo:nil repeats:YES];
+    NSTimer *timer =  [NSTimer scheduledTimerWithTimeInterval:0.01f target:self selector:@selector(notifPlayTime) userInfo:nil repeats:YES];
     self.timer = timer;
     return timer;
 }
@@ -541,11 +600,11 @@ const CGFloat subViewAlpht = 0.55f;
 {
     if (videoCurreSec < 10) {
         
-        self.timeSlider.popover.textLabel.text = [NSString stringWithFormat:@"0%.2f", videoCurreSec];
+//        self.timeSlider.popover.textLabel.text = [NSString stringWithFormat:@"0%.2f", videoCurreSec];
         [self.playBtn setTitle:[NSString stringWithFormat:@"0%.2f",videoCurreSec] forState:UIControlStateNormal];
     }else
     {
-        self.timeSlider.popover.textLabel.text = [NSString stringWithFormat:@"%.2f", videoCurreSec];
+//        self.timeSlider.popover.textLabel.text = [NSString stringWithFormat:@"%.2f", videoCurreSec];
         [self.playBtn setTitle:[NSString stringWithFormat:@"%.2f",videoCurreSec] forState:UIControlStateNormal];
     }
 }

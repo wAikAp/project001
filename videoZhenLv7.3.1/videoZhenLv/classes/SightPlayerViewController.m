@@ -9,6 +9,8 @@
 #import "SightPlayerViewController.h"
 #import "MBProgressHUD+MJ.h"
 #import "Masonry.h"
+#import "UIImage+videoTool.h"
+#import <AVFoundation/AVFoundation.h>
 
 
 @interface SightPlayerViewController () <UITableViewDelegate,UITableViewDataSource>
@@ -35,6 +37,13 @@
         [self.cleanBtn setTitle:@"temp没视频" forState:UIControlStateNormal];
     }
     self.tableView.estimatedRowHeight = 100;
+//    NSLog(@"back = %@",self.navigationController.navigationItem.backBarButtonItem);
+//    self.navigationController.navigationItem.backBarButtonItem;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
 }
 
 - (IBAction)cleanTempCaChe:(UIButton *)sender {
@@ -58,13 +67,18 @@
     } completionBlock:^{
         self.fileArray = [NSMutableArray array];
         [mb removeFromSuperViewOnHide];
-        [MBProgressHUD showSuccess:@"删除完成"];
+        if ([self.cleanBtn.titleLabel.text isEqualToString:@"temp没视频"]) {
+            [MBProgressHUD showSuccess:@"temp没视频"];
+        }else
+        {
+            [MBProgressHUD showSuccess:@"删除完成"];
+        }
         [self.tableView reloadData];
-        NSLog(@"数组删除后 = %@",self.fileArray);
     }];
     
 }
 
+#pragma mark - TableVeiwDataSoure
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.fileArray.count > 0 ? self.fileArray.count : 0;
@@ -74,8 +88,17 @@
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"fileCell" forIndexPath:indexPath];
     cell.textLabel.numberOfLines = 0;
-    CGFloat size = [self fileSizeAtPath:[NSString stringWithFormat:@"%@/%@",self.tempPatch,self.fileArray[indexPath.row]]];
+    NSString *patch = [NSString stringWithFormat:@"%@/%@",self.tempPatch,self.fileArray[indexPath.row]];
+    CGFloat size = [self fileSizeAtPath:patch];
+    
+    NSURL *videoUrl = [[NSURL alloc]initFileURLWithPath:patch];
+    //获取视频截图
+    cell.imageView.image = [UIImage firstFrameWithVideoURL:videoUrl size:CGSizeMake(100, 100)];
+    
     cell.textLabel.text = [NSString stringWithFormat:@"文件 ： %@ \n大小 ： %.2fMB",self.fileArray[indexPath.row],size];
+    
+    
+    
     return cell;
 }
 
@@ -88,7 +111,7 @@
     
     NSString *tempPatch = NSTemporaryDirectory();
     self.tempPatch = tempPatch;
-    NSLog(@"TEMPpatch = %@",tempPatch);
+//    NSLog(@"TEMPpatch = %@",tempPatch);
     NSFileManager *fliemanager = [NSFileManager defaultManager];
     BOOL isHave = [fliemanager fileExistsAtPath:tempPatch];
     if (isHave) {
@@ -115,6 +138,7 @@
     return 0;
 }
 
+#pragma mark - dealloc
 -(void)dealloc
 {
     if (self.deallocBlock) {
