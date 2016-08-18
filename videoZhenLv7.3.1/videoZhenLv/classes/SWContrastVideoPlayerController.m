@@ -11,6 +11,7 @@
 #import "SightPlayerViewController.h"
 #import "SWPlayer.h"
 #import "SWMoveButton.h"
+
 //第三方
 #import "Masonry.h"
 #import "TXHRrettyRuler.h"
@@ -19,7 +20,7 @@
 
 const float CENTER_BUTTON_HEIGHT = 44;//按钮高度
 const NSInteger maxRulerValue = 2222;//尺子长度
-const float animationSec = 0.15f;//按钮动画时间
+const float animationSec = 0.1f;//按钮动画时间
 
 #define WINDOW [UIApplication sharedApplication].keyWindow
 
@@ -103,6 +104,10 @@ const float animationSec = 0.15f;//按钮动画时间
  */
 @property (nonatomic, strong) UIButton *pop4Btn;
 /**
+ *  pop5
+ */
+@property (nonatomic, strong) UIButton *pop5Btn;
+/**
  *  是否横屏状态 yes为是
  */
 @property (nonatomic, assign) BOOL isLandscapeLeftOrRight;
@@ -114,6 +119,14 @@ const float animationSec = 0.15f;//按钮动画时间
  *  是否偏移
  */
 @property (nonatomic, assign) BOOL isPianYi;
+/**
+ *  关闭叠合按钮
+ */
+@property (nonatomic, strong) UIButton *closeBtn;
+/**
+ *  nav按钮
+ */
+@property (weak, nonatomic) IBOutlet UIButton *navRightBtn;
 
 @end
 
@@ -136,11 +149,15 @@ const float animationSec = 0.15f;//按钮动画时间
     
     self.vcToolView.hidden = YES;
     self.pianYiBtn.hidden = YES;
+    //窗口+tap
 }
 
--(void)viewWillAppear:(BOOL)animated
+-(void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    [super viewDidAppear:animated];
+    if (self.player1 || self.player2) {
+        [self hiddenPOPButton:NO];
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -214,16 +231,40 @@ const float animationSec = 0.15f;//按钮动画时间
     self.labelView = labelView;
     labelView.hidden = YES;
     
+    /**
+     *  偏移按钮
+     */
     UIButton *pianYiBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [pianYiBtn setTitle:@"偏移" forState:UIControlStateNormal];
     [pianYiBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.view addSubview:pianYiBtn];
     [pianYiBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.view).mas_offset(10);
-        make.trailing.mas_equalTo(self.view).mas_offset(-10);
+        make.leading.mas_equalTo(self.view).mas_offset(10);
+        make.bottom.mas_equalTo(self.vcToolView.mas_top).mas_offset(-20);
     }];
     self.pianYiBtn = pianYiBtn;
     [pianYiBtn addTarget:self action:@selector(pianYiDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    /**
+     *  关闭按钮
+     */
+    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [closeBtn setTitle:@"X" forState:UIControlStateNormal];
+    [closeBtn setBackgroundColor:[UIColor whiteColor]];
+    [closeBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    closeBtn.sw_height = closeBtn.sw_width = 44;
+    closeBtn.layer.cornerRadius = closeBtn.sw_width/2;
+    closeBtn.layer.masksToBounds = YES;
+    [self.view addSubview:closeBtn];
+    [closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(self.view).mas_offset(-20);
+        make.top.mas_equalTo(self.labelView).mas_offset(20);
+    }];
+    
+    [closeBtn addTarget:self action:@selector(closePileVideo:) forControlEvents:UIControlEventTouchUpInside];
+    closeBtn.hidden = YES;
+    self.closeBtn = closeBtn;
+
 }
 
 
@@ -263,9 +304,8 @@ const float animationSec = 0.15f;//按钮动画时间
 -(void)setPopSubButton {
     
     UIButton *pop1Btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [pop1Btn setTitle:@"叠合" forState:UIControlStateNormal];
-    pop1Btn.selected = YES;
-//    pop1Btn.backgroundColor = [UIColor redColor];
+    [pop1Btn setTitle:@"复原" forState:UIControlStateNormal];
+    pop1Btn.backgroundColor = [UIColor redColor];
     pop1Btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     [pop1Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     pop1Btn.layer.cornerRadius = 15;
@@ -277,8 +317,8 @@ const float animationSec = 0.15f;//按钮动画时间
     [pop1Btn addTarget:self action:@selector(popBtnClick:) forControlEvents: UIControlEventTouchUpInside];
     
     UIButton *pop2Btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [pop2Btn setTitle:@"Video1" forState:UIControlStateNormal];
-//    pop2Btn.backgroundColor = [UIColor blueColor];
+    [pop2Btn setTitle:@"放大V1" forState:UIControlStateNormal];
+    pop2Btn.backgroundColor = [UIColor blueColor];
     [pop2Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     pop2Btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     pop2Btn.layer.cornerRadius = 15;
@@ -290,9 +330,9 @@ const float animationSec = 0.15f;//按钮动画时间
     [pop2Btn addTarget:self action:@selector(popBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *pop3Btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [pop3Btn setTitle:@"Video2" forState:UIControlStateNormal];
+    [pop3Btn setTitle:@"放大V2" forState:UIControlStateNormal];
     [pop3Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//    pop3Btn.backgroundColor = [UIColor whiteColor];
+    pop3Btn.backgroundColor = [UIColor whiteColor];
     pop3Btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     pop3Btn.layer.cornerRadius = 15;
     pop3Btn.layer.masksToBounds = YES;
@@ -303,7 +343,7 @@ const float animationSec = 0.15f;//按钮动画时间
     [pop3Btn addTarget:self action:@selector(popBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *pop4Btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [pop4Btn setTitle:@"复原" forState:UIControlStateNormal];
+    [pop4Btn setTitle:@"清除V1" forState:UIControlStateNormal];
     pop4Btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     [pop4Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     pop4Btn.layer.cornerRadius = 15;
@@ -314,28 +354,43 @@ const float animationSec = 0.15f;//按钮动画时间
     pop4Btn.tag = 3;
     [pop4Btn addTarget:self action:@selector(popBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     
+    UIButton *pop5Btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [pop5Btn setTitle:@"清除V2" forState:UIControlStateNormal];
+    pop5Btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
+    [pop5Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    pop5Btn.layer.cornerRadius = 15;
+    pop5Btn.layer.masksToBounds = YES;
+    pop5Btn.frame = pop4Btn.frame;
+    self.pop5Btn = pop5Btn;
+    pop5Btn.tag = 4;
+    [pop5Btn addTarget:self action:@selector(popBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    
     pop2Btn.alpha = 0.8f;
     pop3Btn.alpha = 0.8f;
     pop1Btn.alpha = 0.8f;
     pop4Btn.alpha = 0.8f;
+    pop5Btn.alpha = 0.8f;
     
     [pop1Btn setBackgroundImage:[UIImage imageNamed:@"mao2"] forState:UIControlStateNormal];
     [pop2Btn setBackgroundImage:[UIImage imageNamed:@"mao2"] forState:UIControlStateNormal];
     [pop3Btn setBackgroundImage:[UIImage imageNamed:@"mao2"] forState:UIControlStateNormal];
     [pop4Btn setBackgroundImage:[UIImage imageNamed:@"mao2"] forState:UIControlStateNormal];
+    [pop5Btn setBackgroundImage:[UIImage imageNamed:@"mao2"] forState:UIControlStateNormal];
     
     
     [pop1Btn setBackgroundImage:[UIImage imageNamed:@"mao3"] forState:UIControlStateSelected];
     [pop2Btn setBackgroundImage:[UIImage imageNamed:@"mao3"] forState:UIControlStateSelected];
     [pop3Btn setBackgroundImage:[UIImage imageNamed:@"mao3"] forState:UIControlStateSelected];
     [pop4Btn setBackgroundImage:[UIImage imageNamed:@"mao3"] forState:UIControlStateSelected];
+    [pop5Btn setBackgroundImage:[UIImage imageNamed:@"mao3"] forState:UIControlStateSelected];
     
     self.topRightBtn.alpha = 0.8f;
     [self hiddenPOPButton:YES];
     [WINDOW addSubview:pop1Btn];
     [WINDOW addSubview:pop2Btn];
     [WINDOW addSubview:pop3Btn];
-//    [WINDOW addSubview:pop4Btn];
+    [WINDOW addSubview:pop4Btn];
+    [WINDOW addSubview:pop5Btn];
     [WINDOW addSubview:self.topRightBtn];
     
 }
@@ -403,72 +458,51 @@ const float animationSec = 0.15f;//按钮动画时间
 }
 
 
+#pragma mark - 清空视频
 /**
  *  隐藏pop按钮带动画
  */
 -(void)hiddenPopBtnAndToolViewWithPlayer:(SWPlayer *)player
 {
     [UIView animateWithDuration:0.25 animations:^{
-        player.alpha = 0.3f;
+        player.alpha = 0.0f;
     }completion:^(BOOL finished) {
+        int playNum = player.playerNumber;
+        if (playNum == 1) {
+            
+            self.player1 =nil;
+            
+        }else if ( playNum == 2)
+        {
+            self.player2 = nil;
+        }
         [player removeFromSuperview];
-        if (self.player1 == nil && self.player2 == nil) {
         
+        if (self.player1 == nil && self.player2 == nil) {
+            [self.navigationController setNavigationBarHidden:NO animated:YES];
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
             [UIView animateWithDuration:0.25 animations:^{
                 self.topRightBtn.alpha = 0.0f;
                 self.pop1Btn.alpha = 0.0f;
                 self.pop2Btn.alpha = 0.0f;
                 self.pop3Btn.alpha = 0.0f;
                 self.pop4Btn.alpha = 0.0f;
+                self.pop5Btn.alpha = 0.0f;
+                [self.navRightBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
             } completion:^(BOOL finished) {
                 self.vcToolView.hidden = YES;
                 [self hiddenPOPButton:YES];
-                self.pop1Btn.alpha = self.pop2Btn.alpha = self.pop2Btn.alpha =
+               self.pop5Btn.alpha = self.pop1Btn.alpha = self.pop2Btn.alpha = self.pop2Btn.alpha =
                 self.pop3Btn.alpha = self.pop4Btn.alpha = self.topRightBtn.alpha = 0.8f;
+                self.closeBtn.hidden = YES;
+                self.pianYiBtn.hidden = YES;
+                self.labelView.hidden = YES;
             }];
         }
     }];
 }
 
-#pragma mark - 清空视频
-/**
- *  清空视频1
- */
-- (IBAction)clickVideoBtn:(UIButton *)sender
-{
-    if (self.player1 == nil) {
-        return;
-    }
-    for (UIView *subView in self.view.subviews) {
-        if ([subView isKindOfClass:[SWPlayer class]]) {
-            SWPlayer *player = (SWPlayer *)subView;
-            if (player.playerNumber == 1) {
-                self.player1 = nil;
-                [self hiddenPopBtnAndToolViewWithPlayer:player];
-            }
-        }
-    }
-}
 
-
-/**
- *  清空视频2
- */
-- (IBAction)cleanVideo2:(id)sender {
-//    NSLog(@"ssss");
-    if (self.player2 == nil) {
-        return;
-    }
-    for (UIView *subView in self.view.subviews) {
-        if ([subView isKindOfClass:[SWPlayer class]]) {
-            SWPlayer *player = (SWPlayer *)subView;
-            if (player.playerNumber == 2) {
-                self.player2 = nil;
-                [self hiddenPopBtnAndToolViewWithPlayer:player];
-            }
-        }
-    }
-}
 
 #pragma mark - imagePicker回调
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
@@ -519,6 +553,9 @@ const float animationSec = 0.15f;//按钮动画时间
     [self.view bringSubviewToFront:self.labelView];
     [self hiddenPOPButton:NO];
     self.vcToolView.hidden = NO;
+    if (self.player1 && self.player2) {
+        [self.navRightBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    }
 }
 
 /**
@@ -532,6 +569,7 @@ const float animationSec = 0.15f;//按钮动画时间
         self.pop2Btn.hidden = hidden;
         self.pop3Btn.hidden = hidden;
         self.pop4Btn.hidden = hidden;
+        self.pop5Btn.hidden = hidden;
     }];
 }
 
@@ -646,6 +684,7 @@ const float animationSec = 0.15f;//按钮动画时间
     }
 }
 
+
 #pragma mark - popBtn点击事件:
 //pop子按钮点击事件
 -(void)popBtnClick:(UIButton *)popBtn
@@ -657,31 +696,53 @@ const float animationSec = 0.15f;//按钮动画时间
     switch (popBtn.tag) {
         case 0:
             //叠合视频
-            NSLog(@"popBtn1 : 叠合");
-            [self pileUpVideo];
+            NSLog(@"popBtn1 : 复原");
+            [self recoverPlayer:self.player1 andView:self.player1View];
+            [self recoverPlayer:self.player2 andView:self.player2View];
+            self.closeBtn.hidden = YES;
+            self.pianYiBtn.hidden = YES;
+            
             break;
         case 1:
             NSLog(@"popBtn2 : video1");
-            [self changeVideoPlayerToFont:self.player1 andView:self.player1View];
+            if (self.player1.playerIsFont) {
+                //复原
+                [self recoverPlayer:self.player1 andView:self.player1View];
+            }else
+            {
+                //放最前
+                [self changeVideoPlayerToFont:self.player1 andView:self.player1View];
+            }
+            
             break;
             
         case 2:
             NSLog(@"popBtn3 : video2");
-            [self changeVideoPlayerToFont:self.player2 andView:self.player2View];
+            if (self.player2.playerIsFont) {
+                //复原
+                [self recoverPlayer:self.player2 andView:self.player2View];
+            }else
+            {
+                //最前
+                [self changeVideoPlayerToFont:self.player2 andView:self.player2View];
+            }
             break;
             
         case 3:
-            NSLog(@"popBtn4 : 复原");
-            [self recoverPlayer:self.player1 andView:self.player1View];
-            [self recoverPlayer:self.player2 andView:self.player2View];
-            
+            NSLog(@"popBtn4 : clean1");
+            if (self.player1 == nil) {return;}
+            [self hiddenPopBtnAndToolViewWithPlayer:self.player1];
+            break;
+        case 4:
+            NSLog(@"popBtn5 :clean2");
+            if (self.player2 == nil) {return;}
+            [self hiddenPopBtnAndToolViewWithPlayer:self.player2];
+            break;
         default:
             break;
     }
     
     [self closeMoveBtn:self.topRightBtn];
-//    self.topRightBtn.selected = !self.topRightBtn.selected;
-    
 }
 /**
  *  提示用户当前选中哪个pop按钮
@@ -695,6 +756,7 @@ const float animationSec = 0.15f;//按钮动画时间
             self.pop2Btn.selected = NO;
             self.pop3Btn.selected = NO;
             self.pop4Btn.selected = NO;
+            self.pop5Btn.selected = NO;
             break;
             
         case 1:
@@ -702,6 +764,7 @@ const float animationSec = 0.15f;//按钮动画时间
             self.pop2Btn.selected = YES;
             self.pop3Btn.selected = NO;
             self.pop4Btn.selected = NO;
+            self.pop5Btn.selected = NO;
             break;
            
         case 2:
@@ -709,6 +772,7 @@ const float animationSec = 0.15f;//按钮动画时间
             self.pop2Btn.selected = NO;
             self.pop3Btn.selected = YES;
             self.pop4Btn.selected = NO;
+            self.pop5Btn.selected = NO;
             break;
             
         case 3:
@@ -716,6 +780,14 @@ const float animationSec = 0.15f;//按钮动画时间
             self.pop2Btn.selected = NO;
             self.pop3Btn.selected = NO;
             self.pop4Btn.selected = YES;
+            self.pop5Btn.selected = NO;
+            break;
+        case 4:
+            self.pop1Btn.selected = NO;
+            self.pop2Btn.selected = NO;
+            self.pop3Btn.selected = NO;
+            self.pop4Btn.selected = NO;
+            self.pop5Btn.selected = YES;
             break;
         default:
             break;
@@ -741,6 +813,10 @@ const float animationSec = 0.15f;//按钮动画时间
             }completion:^(BOOL finished) {
                 [UIView animateWithDuration:animationSec animations:^{
                     self.pop4Btn.frame = self.pop3Btn.frame;
+                }completion:^(BOOL finished) {
+                    [UIView animateWithDuration:animationSec animations:^{
+                        self.pop5Btn.frame = self.pop4Btn.frame;
+                    }];
                 }];
             }];
         }];
@@ -755,89 +831,102 @@ const float animationSec = 0.15f;//按钮动画时间
 -(void)moveBtnIsOpenIngToPopBtnXDidMove:(UIButton *)moveBtn
 {
     if (moveBtn.sw_x >= SW_SCREEN_WIDTH/2) {//展开
-       [UIView animateWithDuration:animationSec animations:^{
-           self.pop4Btn.frame =  CGRectMake(moveBtn.sw_x - moveBtn.sw_width * 4 - 5*4 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
-       } completion:^(BOOL finished) {
-           
-           //先移动pop3
-           [UIView animateWithDuration:animationSec animations:^{//动画1
-               
-               self.pop3Btn.frame = CGRectMake(moveBtn.sw_x - moveBtn.sw_width * 3 - 5*3 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
-               
-           } completion:^(BOOL finished) {
-               
-               //完成再移动pop2
-               [UIView animateWithDuration:animationSec animations:^{//动画2
-                   
-                   self.pop2Btn.frame = CGRectMake(moveBtn.sw_x - moveBtn.sw_width*2 - 5*2 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
-                   
-               } completion:^(BOOL finished) {
-                   //动画完成再移动pop1
-                   [UIView animateWithDuration:animationSec  animations:^{//动画3
-                       self.pop1Btn.frame = CGRectMake(self.pop2Btn.sw_x + moveBtn.sw_width + 5 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
-                   }];
-               }];
-           }];
-       }];
-        
-    }else {
         
         [UIView animateWithDuration:animationSec animations:^{
-            self.pop4Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + moveBtn.sw_width*3 + 5*4 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
-        } completion:^(BOOL finished) {
-            //先移动pop3
-            [UIView animateWithDuration:animationSec animations:^{//1
-                
-                self.pop3Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + moveBtn.sw_width*2 + 5*3 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
-                
+            if (moveBtn.sw_x - moveBtn.sw_width * 5 - 5*5 < 0) {
+                //如果x比0还小就换行
+                self.pop5Btn.frame = CGRectMake(moveBtn.sw_x - moveBtn.sw_width * 4 - 5*4, moveBtn.sw_y + moveBtn.sw_width + 5, moveBtn.sw_width, moveBtn.sw_height);
+            }else
+            {
+                self.pop5Btn.frame =  CGRectMake(moveBtn.sw_x - moveBtn.sw_width * 5 - 5*5 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
+            }
+            
+        }completion:^(BOOL finished) {
+            
+            [UIView animateWithDuration:animationSec animations:^{
+                self.pop4Btn.frame =  CGRectMake(moveBtn.sw_x - moveBtn.sw_width * 4 - 5*4 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
             } completion:^(BOOL finished) {
                 
-                [UIView animateWithDuration:animationSec animations:^{//2
-                    //先移动pop2
-                    self.pop2Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + moveBtn.sw_width + 5*2 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
+                //先移动pop3
+                [UIView animateWithDuration:animationSec animations:^{//动画1
+                    
+                    self.pop3Btn.frame = CGRectMake(moveBtn.sw_x - moveBtn.sw_width * 3 - 5*3 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
+                    
                 } completion:^(BOOL finished) {
-                    //动画完成再移动pop1
-                    [UIView animateWithDuration:animationSec  animations:^{//3
-                        self.pop1Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + 5 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
+                    
+                    //完成再移动pop2
+                    [UIView animateWithDuration:animationSec animations:^{//动画2
+                        
+                        self.pop2Btn.frame = CGRectMake(moveBtn.sw_x - moveBtn.sw_width*2 - 5*2 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
+                        
+                    } completion:^(BOOL finished) {
+                        //动画完成再移动pop1
+                        [UIView animateWithDuration:animationSec  animations:^{//动画3
+                            self.pop1Btn.frame = CGRectMake(self.pop2Btn.sw_x + moveBtn.sw_width + 5 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
+                        }];
                     }];
                 }];
             }];
         }];
+    }else {
         
-    }
-}
-
-
-- (IBAction)capScreenImage:(UIButton *)sender {
-    UIImage *image = [self screenView:self.view];
-    NSLog(@"%@",image);
-    UIImageView *imageView = [[UIImageView alloc]initWithImage:image];
-    imageView.frame = self.view.frame;
-    [self.view addSubview:imageView];
-}
-#pragma mark - 跳转触发
-/**
- *  跳转触发
- *
- *  @param segueID  push2cleanVC
- */
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"push2cleanVC"]) {
-        [self hiddenPOPButton:YES];
-        //下个控制器释放回调
-        SightPlayerViewController *sightVC  = (SightPlayerViewController *)segue.destinationViewController;
-        __weak typeof(self) weakSelf = self;
-        [sightVC setDeallocBlock:^{
-            if (weakSelf.player1==nil && weakSelf.player2 == nil) {
-                return ;
+        [UIView animateWithDuration:animationSec animations:^{
+            if (CGRectGetMaxX(moveBtn.frame) + moveBtn.sw_width*4 + 5*5 >= SW_SCREEN_WIDTH - moveBtn.sw_width) {
+                //换行
+                self.pop5Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + moveBtn.sw_width*3 + 5*4 , moveBtn.sw_y + moveBtn.sw_width + 5, moveBtn.sw_width, moveBtn.sw_height);
+                
+            }else{
+                self.pop5Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + moveBtn.sw_width*4 + 5*5 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
             }
-            [weakSelf hiddenPOPButton:NO];
+            
+        } completion:^(BOOL finished) {
+            
+            [UIView animateWithDuration:animationSec animations:^{
+                self.pop4Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + moveBtn.sw_width*3 + 5*4 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
+            } completion:^(BOOL finished) {
+                //先移动pop3
+                [UIView animateWithDuration:animationSec animations:^{//1
+                    
+                    self.pop3Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + moveBtn.sw_width*2 + 5*3 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
+                    
+                } completion:^(BOOL finished) {
+                    
+                    [UIView animateWithDuration:animationSec animations:^{//2
+                        //先移动pop2
+                        self.pop2Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + moveBtn.sw_width + 5*2 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
+                    } completion:^(BOOL finished) {
+                        //动画完成再移动pop1
+                        [UIView animateWithDuration:animationSec  animations:^{//3
+                            self.pop1Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + 5 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
+                        }];
+                    }];
+                }];
+            }];
         }];
-        
     }
 }
 
+#pragma mark - 叠合视频按钮事件
+- (IBAction)dieHeVideo:(UIButton *)sender {
+    [self pileUpVideo];
+}
+//解除叠合
+-(void)closePileVideo:(UIButton *)sender
+{
+    [self pileUpVideo];
+}
+
+#pragma mark - 截图
+/**
+ *  截图
+ */
+- (void)capScreenImage:(UIButton *)sender {
+    UIImage *image = [self screenView:self.view];
+    UIImageView *imageView = [[UIImageView alloc]initWithImage:image];
+    imageView.frame = CGRectMake(100, 100, 300, 300);
+    [self.view addSubview:imageView];
+    
+}
 
 #pragma mark - moveBtnDelegate
 //当按钮移动时调用
@@ -876,8 +965,6 @@ const float animationSec = 0.15f;//按钮动画时间
         player.backgroundColor = [UIColor blackColor];//底色
         [self hiddenPlayerSubViewsPlayer:player hiddenSubViews:NO];//不隐藏子view
         self.labelView.hidden = YES;
-        [player.timeSlider hidePopover];
-        
     }];
 }
 
@@ -926,12 +1013,13 @@ const float animationSec = 0.15f;//按钮动画时间
     if (self.player1 == nil && self.player2 == nil) {
         NSLog(@"没有player - return");
         return;
+    }else if (self.player1 == nil || self.player2 == nil)
+    {
+        return;
     }
 
     if (_isDoubleSreen == NO) {
-//        NSLog(@"叠合状态");
-        //叠合状态下就显示分屏
-        [self.pop1Btn setTitle:@"分屏" forState:UIControlStateNormal];
+        //叠合
         _isDoubleSreen = YES;
         
         [self.navigationController setNavigationBarHidden:YES animated:YES];
@@ -942,9 +1030,12 @@ const float animationSec = 0.15f;//按钮动画时间
         [self.view bringSubviewToFront:self.vcToolView];
         [self.view bringSubviewToFront:self.labelView];
         [self.view bringSubviewToFront:self.pianYiBtn];
+        [self.view bringSubviewToFront:self.closeBtn];
         self.pianYiBtn.hidden = NO;
+        self.closeBtn.hidden = NO;
         self.labelView.hidden = NO;
         self.pianYiBtn.alpha = 0;
+        self.closeBtn.alpha = 0;
         self.labelView.alpha = 0;
         
         [UIView animateWithDuration:0.25 animations:^{
@@ -958,10 +1049,24 @@ const float animationSec = 0.15f;//按钮动画时间
                 make.leading.mas_equalTo(self.view).mas_offset(0);
                 
             }];
-            self.pianYiBtn.alpha = 1;
-            self.video1Label.text = [NSString stringWithFormat:@"底视频ONE : 0%.2f",self.player1.timeSlider.value];
-            self.video2Label.text = [NSString stringWithFormat:@"底视频TWO : 0%.2f",self.player2.timeSlider.value];
+            if (self.video1Label.text.floatValue < 10) {
+                
+                self.video1Label.text = [NSString stringWithFormat:@"底视频ONE : 0%.2f",self.player1.timeSlider.value];
+            }else
+            {
+                self.video1Label.text = [NSString stringWithFormat:@"底视频ONE : %.2f",self.player1.timeSlider.value];
+            }
+            if (self.video2Label.text.floatValue < 10) {
+                
+                self.video2Label.text = [NSString stringWithFormat:@"底视频TWO : 0%.2f",self.player2.timeSlider.value];
+            }else
+            {
+                self.video2Label.text = [NSString stringWithFormat:@"底视频TWO : %.2f",self.player2.timeSlider.value];
+            }
+            
             self.labelView.alpha = 1;
+            self.pianYiBtn.alpha = 1;
+            self.closeBtn.alpha = 1;
             self.player2.alpha = 0.66f;
             [self hiddenPlayerSubViewsPlayer:self.player1 hiddenSubViews:YES];
             [self hiddenPlayerSubViewsPlayer:self.player2 hiddenSubViews:YES];
@@ -971,9 +1076,7 @@ const float animationSec = 0.15f;//按钮动画时间
             self.player1.backgroundColor = [UIColor blackColor];
         }];
     }else{//一个按钮2件事情处理
-//        NSLog(@"不是full");
-        //分屏状态下
-        [self.pop1Btn setTitle:@"叠合" forState:UIControlStateNormal];
+        //分屏
         if (_isLandscapeLeftOrRight == NO) {//横屏状态的话
             
             [self.navigationController setNavigationBarHidden:NO animated:YES];
@@ -999,15 +1102,18 @@ const float animationSec = 0.15f;//按钮动画时间
             }];
             
             self.labelView.alpha = 0;
+            self.closeBtn.alpha = 0;
             [self hiddenPlayerSubViewsPlayer:self.player1 hiddenSubViews:NO];
             [self hiddenPlayerSubViewsPlayer:self.player2 hiddenSubViews:NO];
             
         }completion:^(BOOL finished) {
             self.labelView.hidden = YES;
             self.pianYiBtn.hidden = YES;
+            self.closeBtn.hidden = YES;
         }];
     }
 }
+
 
 /**
  *  隐藏player的子view
@@ -1022,10 +1128,6 @@ const float animationSec = 0.15f;//按钮动画时间
     player.clockView.hidden = hidden;
     //尺子隐藏
     player.rulerView.hidden = hidden;
-    
-    //View隐藏
-    //    player1.rangeView.hidden = hidden;
-    //    player2.rangeView.hidden = hidden;
 }
 
 #pragma mark - 监听旋转
@@ -1041,28 +1143,29 @@ const float animationSec = 0.15f;//按钮动画时间
     if (orientation == UIInterfaceOrientationLandscapeRight) // home键靠右
     {
         NSLog(@"home键靠右");
-        [self.navigationController setNavigationBarHidden:YES animated:YES];
-        [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-        _isLandscapeLeftOrRight = YES;
+        [self screenLandsCapeLeftOrRight];
     }
     
     if (
         orientation ==UIInterfaceOrientationLandscapeLeft) // home键靠左
     {
         NSLog(@"home键靠左");
-        [self.navigationController setNavigationBarHidden:YES animated:YES];
-        [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-        _isLandscapeLeftOrRight = YES;
+        [self screenLandsCapeLeftOrRight];
     }
     
     if (orientation == UIInterfaceOrientationPortrait)
     {
-        //
         NSLog(@"恢复");
         if (_isDoubleSreen == NO && (self.player1.playerIsFont == NO && self.player2.playerIsFont  == NO)) {
         
             [self.navigationController setNavigationBarHidden:NO animated:YES];
             [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+        }else if((self.player1 && self.player2 ==nil) || (self.player2 && self.player1 == nil))
+        {
+            [self.navigationController setNavigationBarHidden:NO animated:YES];
+            [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+            [self recoverPlayer:self.player2 andView:self.player2View];
+            [self recoverPlayer:self.player1 andView:self.player1View];
         }
         _isLandscapeLeftOrRight = NO;
         
@@ -1073,6 +1176,27 @@ const float animationSec = 0.15f;//按钮动画时间
         NSLog(@"down");
     }
 }
+
+/**
+ *  旋转为左右时
+ */
+-(void)screenLandsCapeLeftOrRight{
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+    _isLandscapeLeftOrRight = YES;
+    
+    if (self.player1 == nil && self.player2 != nil ) {
+        //player1为空 player2全屏
+        NSLog(@"???");
+        [self changeVideoPlayerToFont:self.player2 andView:self.view];
+        
+    }else if ( self.player2 == nil && self.player1 != nil)
+    {
+        //player2为空 Player1全屏
+        [self changeVideoPlayerToFont:self.player1 andView:self.view];
+    }
+}
+
 
 #pragma mark - 进入后台通知
 -(void)appWillInBackGround:(NSNotification *)notif
@@ -1092,21 +1216,15 @@ const float animationSec = 0.15f;//按钮动画时间
  *  截屏
  */
 - (UIImage*)screenView:(UIView *)view{
-//    CGRect rect = view.frame;
-//    UIGraphicsBeginImageContext(rect.size);
-//    CGContextRef context = UIGraphicsGetCurrentContext();
-//    [view.layer renderInContext:context];
-////    [self.navigationController.view.layer renderInContext:context];
-////    [[UIApplication sharedApplication].keyWindow.layer renderInContext:context];
-//    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//    return img;
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size,YES,0);
     
-//    [view drawHierarchyInRect:view.bounds afterScreenUpdates:YES];
+    CGSize size = view.bounds.size;
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
+    
+    CGRect rec = CGRectMake(view.frame.origin.x, view.frame.origin.y, view.bounds.size.width, view.bounds.size.height);
+    [view drawViewHierarchyInRect:rec afterScreenUpdates:YES];
     
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    
     UIGraphicsEndImageContext();
     
     return image;

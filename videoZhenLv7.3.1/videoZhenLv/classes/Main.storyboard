@@ -372,52 +372,27 @@
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" id="Yts-5a-kB0">
-                        <leftBarButtonItems>
-                            <barButtonItem style="done" id="cIp-oU-da5">
-                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="FkE-Ze-eEc">
-                                    <rect key="frame" x="20" y="5" width="60" height="34"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                    <state key="normal" title="Clean1">
-                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="clickVideoBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GMr-fV-1n2"/>
-                                    </connections>
-                                </button>
-                            </barButtonItem>
-                            <barButtonItem style="plain" id="xfK-Vw-QP7">
-                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="8VJ-xw-kox">
-                                    <rect key="frame" x="88" y="5" width="92" height="34"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <state key="normal" title="Clean2">
-                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="cleanVideo2:" destination="BYZ-38-t0r" eventType="touchUpInside" id="KnT-wu-UWL"/>
-                                    </connections>
-                                </button>
-                            </barButtonItem>
-                        </leftBarButtonItems>
                         <rightBarButtonItems>
                             <barButtonItem style="plain" id="r2h-P8-cUG">
-                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="7iw-A0-WKA">
-                                    <rect key="frame" x="302" y="7" width="92" height="30"/>
+                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="7iw-A0-WKA">
+                                    <rect key="frame" x="302" y="5" width="92" height="34"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <state key="normal" title="截图"/>
+                                    <state key="normal" title="Push"/>
                                     <connections>
-                                        <action selector="capScreenImage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="caW-AE-jVj"/>
+                                        <segue destination="Izc-u1-HPw" kind="show" id="D2A-NM-DGv"/>
                                     </connections>
                                 </button>
                             </barButtonItem>
                             <barButtonItem style="plain" id="z6W-WL-koO">
                                 <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="w1r-Im-aXW">
-                                    <rect key="frame" x="202" y="7" width="92" height="30"/>
+                                    <rect key="frame" x="202" y="5" width="92" height="34"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                    <state key="normal" title="Push"/>
+                                    <state key="normal" title="叠合">
+                                        <color key="titleColor" red="0.60000002379999995" green="0.60000002379999995" blue="0.60000002379999995" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
                                     <connections>
-                                        <segue destination="Izc-u1-HPw" kind="show" identifier="push2cleanVC" id="lJr-za-3yh"/>
+                                        <action selector="dieHeVideo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QEp-GN-LQV"/>
                                     </connections>
                                 </button>
                             </barButtonItem>
@@ -427,6 +402,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="414" height="736"/>
                     <connections>
+                        <outlet property="navRightBtn" destination="w1r-Im-aXW" id="85t-YY-sTT"/>
                         <outlet property="player1View" destination="ZCP-gf-8Xr" id="6OQ-3v-YUO"/>
                         <outlet property="player2View" destination="x5h-UD-Gg2" id="q70-xO-YjZ"/>
                         <outlet property="scrollTimeView" destination="FA7-0o-O2M" id="qeV-OI-gjT"/>
@@ -436,7 +412,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="555.75" y="243"/>
+            <point key="canvasLocation" x="555" y="263"/>
         </scene>
         <!--Sight Player View Controller-->
         <scene sceneID="4vv-8E-zxH">
@@ -520,7 +496,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W0f-RF-80F" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1287" y="360"/>
+            <point key="canvasLocation" x="1036" y="278"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="WNg-pY-Wvy">

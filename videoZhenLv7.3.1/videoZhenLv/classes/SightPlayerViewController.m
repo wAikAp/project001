@@ -25,6 +25,7 @@
 
 @implementation SightPlayerViewController
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
@@ -142,6 +143,7 @@
 -(void)dealloc
 {
     if (self.deallocBlock) {
+        NSLog(@"有吗");
         self.deallocBlock();
     }
     NSLog(@"SightPlayerViewControllerGG");
