@@ -153,6 +153,9 @@
     
     shapeLayerLine.path = pathLine;
 //    [self.layer addSublayer:shapeLayerLine];
+    //释放内存
+    CGPathRelease(pathLine);
+    CGPathRelease(pathArc);
 }
 
 #pragma mark - tool method

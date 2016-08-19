@@ -153,7 +153,7 @@ const CGFloat subViewAlpht = 1.0f;//透明度
     self.timeSlider.minimumValue = 0.00;
     self.timeSlider.maximumValue = assDura;
     CMTime zongT = self.player.currentItem.asset.duration;
-    NSLog(@"视频总秒数 = %f —— value数 = %lld —— 每秒帧数 = %d —— 视频的总长度数 = %lld",assDura,zongT.value,zongT.timescale, zongT.value * zongT.timescale);
+    NSLog(@" \n 视频总秒数 = %f\n value数 = %lld\n 每秒帧数 = %d\n 视频的总长度数 = %lld\n",assDura,zongT.value,zongT.timescale, zongT.value * zongT.timescale);
     self.videoZhen = zongT.timescale;
     //监听player状态
     //    [self.player.currentItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
@@ -462,7 +462,7 @@ const CGFloat subViewAlpht = 1.0f;//透明度
     [self.player.currentItem stepByCount:moveZhen];
     sender.value = videoCurreSec;
     [self updateSliderPopoverTextCurreSec:videoCurreSec];
-    NSLog(@"拖动的时间 = %f 进度条时间 = %f",videoCurreSec,sender.value);
+//    NSLog(@"拖动的时间 = %f 进度条时间 = %f",videoCurreSec,sender.value);
 }
 
 #pragma mark - 点击事件
@@ -630,8 +630,12 @@ const CGFloat subViewAlpht = 1.0f;//透明度
 #pragma mark - Dealloc
 -(void)dealloc
 {
+    [self.playerLayer removeFromSuperlayer];
+    self.player = nil;
+    self.playerLayer = nil;
+    self.timer = nil;
     [[NSNotificationCenter defaultCenter]removeObserver:self];
-    NSLog(@"SWplayer  -   dealloc %@",self);
+    NSLog(@"SWplayer  -   dealloc\n %@",self);
     //每次init重载后会先释放父类的 所以会调用一次
 }
 

@@ -236,13 +236,18 @@ const float animationSec = 0.1f;//按钮动画时间
      */
     UIButton *pianYiBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [pianYiBtn setTitle:@"偏移" forState:UIControlStateNormal];
-    [pianYiBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [pianYiBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [pianYiBtn setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:pianYiBtn];
     [pianYiBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.mas_equalTo(self.view).mas_offset(10);
         make.bottom.mas_equalTo(self.vcToolView.mas_top).mas_offset(-20);
+        make.width.height.mas_equalTo(CENTER_BUTTON_HEIGHT);
     }];
+    
     self.pianYiBtn = pianYiBtn;
+    pianYiBtn.layer.cornerRadius = 15;
+    pianYiBtn.layer.masksToBounds = YES;
     [pianYiBtn addTarget:self action:@selector(pianYiDidClick:) forControlEvents:UIControlEventTouchUpInside];
     
     /**
@@ -252,13 +257,13 @@ const float animationSec = 0.1f;//按钮动画时间
     [closeBtn setTitle:@"X" forState:UIControlStateNormal];
     [closeBtn setBackgroundColor:[UIColor whiteColor]];
     [closeBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    closeBtn.sw_height = closeBtn.sw_width = 44;
-    closeBtn.layer.cornerRadius = closeBtn.sw_width/2;
+    closeBtn.layer.cornerRadius = CENTER_BUTTON_HEIGHT/2;
     closeBtn.layer.masksToBounds = YES;
     [self.view addSubview:closeBtn];
     [closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.trailing.mas_equalTo(self.view).mas_offset(-20);
         make.top.mas_equalTo(self.labelView).mas_offset(20);
+        make.width.height.mas_equalTo(CENTER_BUTTON_HEIGHT);
     }];
     
     [closeBtn addTarget:self action:@selector(closePileVideo:) forControlEvents:UIControlEventTouchUpInside];
@@ -696,7 +701,7 @@ const float animationSec = 0.1f;//按钮动画时间
     switch (popBtn.tag) {
         case 0:
             //叠合视频
-            NSLog(@"popBtn1 : 复原");
+//            NSLog(@"popBtn1 : 复原");
             [self recoverPlayer:self.player1 andView:self.player1View];
             [self recoverPlayer:self.player2 andView:self.player2View];
             self.closeBtn.hidden = YES;
@@ -704,7 +709,7 @@ const float animationSec = 0.1f;//按钮动画时间
             
             break;
         case 1:
-            NSLog(@"popBtn2 : video1");
+//            NSLog(@"popBtn2 : video1");
             if (self.player1.playerIsFont) {
                 //复原
                 [self recoverPlayer:self.player1 andView:self.player1View];
@@ -717,7 +722,7 @@ const float animationSec = 0.1f;//按钮动画时间
             break;
             
         case 2:
-            NSLog(@"popBtn3 : video2");
+//            NSLog(@"popBtn3 : video2");
             if (self.player2.playerIsFont) {
                 //复原
                 [self recoverPlayer:self.player2 andView:self.player2View];
@@ -729,12 +734,12 @@ const float animationSec = 0.1f;//按钮动画时间
             break;
             
         case 3:
-            NSLog(@"popBtn4 : clean1");
+//            NSLog(@"popBtn4 : clean1");
             if (self.player1 == nil) {return;}
             [self hiddenPopBtnAndToolViewWithPlayer:self.player1];
             break;
         case 4:
-            NSLog(@"popBtn5 :clean2");
+//            NSLog(@"popBtn5 :clean2");
             if (self.player2 == nil) {return;}
             [self hiddenPopBtnAndToolViewWithPlayer:self.player2];
             break;
@@ -1142,20 +1147,20 @@ const float animationSec = 0.1f;//按钮动画时间
     
     if (orientation == UIInterfaceOrientationLandscapeRight) // home键靠右
     {
-        NSLog(@"home键靠右");
+//        NSLog(@"home键靠右");
         [self screenLandsCapeLeftOrRight];
     }
     
     if (
         orientation ==UIInterfaceOrientationLandscapeLeft) // home键靠左
     {
-        NSLog(@"home键靠左");
+//        NSLog(@"home键靠左");
         [self screenLandsCapeLeftOrRight];
     }
     
     if (orientation == UIInterfaceOrientationPortrait)
     {
-        NSLog(@"恢复");
+//        NSLog(@"恢复");
         if (_isDoubleSreen == NO && (self.player1.playerIsFont == NO && self.player2.playerIsFont  == NO)) {
         
             [self.navigationController setNavigationBarHidden:NO animated:YES];
@@ -1173,7 +1178,7 @@ const float animationSec = 0.1f;//按钮动画时间
     
     if (orientation == UIInterfaceOrientationPortraitUpsideDown)
     {
-        NSLog(@"down");
+//        NSLog(@"down");
     }
 }
 
@@ -1187,7 +1192,6 @@ const float animationSec = 0.1f;//按钮动画时间
     
     if (self.player1 == nil && self.player2 != nil ) {
         //player1为空 player2全屏
-        NSLog(@"???");
         [self changeVideoPlayerToFont:self.player2 andView:self.view];
         
     }else if ( self.player2 == nil && self.player1 != nil)

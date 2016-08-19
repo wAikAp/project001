@@ -74,6 +74,10 @@
     }
     
     self.contentSize = CGSizeMake(self.rulerCount * DISTANCEVALUE + DISTANCELEFTANDRIGHT * 2.f, self.rulerHeight);
+    
+    //释放线
+    CGPathRelease(pathRef1);
+    CGPathRelease(pathRef2);
 }
 
 

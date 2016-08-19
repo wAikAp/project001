@@ -33,13 +33,11 @@
     self.title = @"清除自动备份";
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"fileCell"];
     self.fileArray = [self getTempFlies];
-    NSLog(@"文件数组 = %@",self.fileArray);
+    NSLog(@"\n 文件数组 = %@",self.fileArray);
     if (self.fileArray.count <= 0) {
         [self.cleanBtn setTitle:@"temp没视频" forState:UIControlStateNormal];
     }
     self.tableView.estimatedRowHeight = 100;
-//    NSLog(@"back = %@",self.navigationController.navigationItem.backBarButtonItem);
-//    self.navigationController.navigationItem.backBarButtonItem;
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -54,26 +52,30 @@
     [mb showAnimated:YES whileExecutingBlock:^{
 
         NSString *tempPatch = NSTemporaryDirectory();
-        if (self.fileArray.count > 0) {//temp里面有文件
+        if (self.fileArray.count > 1) {//temp里面有文件
             for (NSString *filePatch in self.fileArray) {
                 NSLog(@"文件：%@",filePatch);
-                BOOL isRemove = [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@",tempPatch,filePatch] error:nil];
-                NSLog(@"%@",isRemove ? @"删除成功":@"删除失败");
+                //系统自动生成的文件夹
+                if (![filePatch isEqualToString:@"MediaCache"]) {//这个MediaCache文件夹不用删除
+                    BOOL isRemove = [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@",tempPatch,filePatch] error:nil];
+                    NSLog(@"%@",isRemove ? @"删除成功":@"删除失败");
+                }
             }
             [sender setTitle:@"删除完成" forState:UIControlStateNormal];
-        }else{
-            NSLog(@"temp没有视频");
+        }else
+        {
             [sender setTitle:@"temp没视频" forState:UIControlStateNormal];
         }
     } completionBlock:^{
-        self.fileArray = [NSMutableArray array];
+        self.fileArray = [NSMutableArray arrayWithObject:self.fileArray[0]];
         [mb removeFromSuperViewOnHide];
-        if ([self.cleanBtn.titleLabel.text isEqualToString:@"temp没视频"]) {
+        if ([sender.titleLabel.text isEqualToString:@"temp没视频"]) {
             [MBProgressHUD showSuccess:@"temp没视频"];
         }else
         {
             [MBProgressHUD showSuccess:@"删除完成"];
         }
+        
         [self.tableView reloadData];
     }];
     
@@ -143,7 +145,7 @@
 -(void)dealloc
 {
     if (self.deallocBlock) {
-        NSLog(@"有吗");
+        NSLog(@"deallocBlock执行");
         self.deallocBlock();
     }
     NSLog(@"SightPlayerViewControllerGG");
