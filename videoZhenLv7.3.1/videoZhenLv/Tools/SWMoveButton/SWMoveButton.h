@@ -11,13 +11,30 @@
 @class SWMoveButton;
 @protocol SWMoveButtonDelegate <NSObject>
 
+@optional;
+-(void)moveBtn:(SWMoveButton *)moveBtn didClickChildPopBtnWithTag:(NSInteger)tag;
+
+@optional;
 -(void)moveBtn:(SWMoveButton *)moveBtn didMoveTheX:(CGFloat)x theY:(CGFloat)y;
+
 
 @end
 
 @interface SWMoveButton : UIButton
 
-@property (nonatomic, weak) id<SWMoveButtonDelegate> moveButtonDelegate;
 
++(instancetype)SWMOveButton;
+
+@property (nonatomic, weak) id<SWMoveButtonDelegate> moveButtonDelegate;
+/**
+ *  关闭按钮
+ *
+ *  @param moveBtn 自己
+ */
+-(void)closeMoveBtn:(UIButton *)moveBtn;
+/**
+ *  检查坐标
+ */
 -(void)moveTheBtnTheXYCheak;
+
 @end

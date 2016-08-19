@@ -38,11 +38,17 @@
         [self.cleanBtn setTitle:@"temp没视频" forState:UIControlStateNormal];
     }
     self.tableView.estimatedRowHeight = 100;
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+}
+
+-(void)popToVc:(UIButton *)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)cleanTempCaChe:(UIButton *)sender {
