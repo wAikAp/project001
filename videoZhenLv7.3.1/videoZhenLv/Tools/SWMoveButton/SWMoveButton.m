@@ -7,7 +7,6 @@
 //
 
 #import "SWMoveButton.h"
-#import "Masonry.h"
 #import "UIView+SWUtility.h"
 
 CGFloat const marring = 5;
@@ -47,38 +46,10 @@ const float animationSec = 0.1f;//按钮动画时间
 
 -(void)setHighlighted:(BOOL)highlighted{}//取消高亮
 
-
--(instancetype)initWithFrame:(CGRect)frame
-{
-    if (self = [super initWithFrame:frame]) {
-        [self setThePan];
-        
-    }
-    return self;
-}
-
--(instancetype)init
-{
-    if (self = [super init]) {
-        [self setThePan];
-        
-    }
-    return self;
-}
-
--(instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    if (self = [super initWithCoder:aDecoder]) {
-        
-        [self setThePan];
-    }
-    return self;
-}
-
 /**
  *  初始化
  */
-+(instancetype)SWMOveButton
++(instancetype)SWMOveButtonOpeningTitle:(NSString *)openTitle CloseTitle:(NSString *)closeTitle andPOPhTitle1:(NSString *)title1 title2:(NSString *)title2 title3:(NSString *)title3 title4:(NSString *)title4 title5:(NSString *)title5
 {
     SWMoveButton *btn = [super buttonWithType:UIButtonTypeCustom];
     [btn setThePan];
@@ -88,19 +59,17 @@ const float animationSec = 0.1f;//按钮动画时间
     btn.titleLabel.numberOfLines = 0;
     [btn setBackgroundImage:[UIImage imageNamed:@"mao3"] forState:UIControlStateNormal];
     
-    [btn setTitle:@"Closing" forState:UIControlStateNormal];
-    [btn setTitle:@"Opening" forState:UIControlStateSelected];
+    [btn setTitle:closeTitle forState:UIControlStateNormal];
+    [btn setTitle:openTitle forState:UIControlStateSelected];
     
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     btn.titleLabel.font = [UIFont boldSystemFontOfSize:14];
     btn.selected = NO;
     btn.layer.cornerRadius = 15;
     btn.layer.masksToBounds = YES;
-    [btn setUpChildPopBtn];
+    [btn setUpChildPopBtnWithPOPhTitle1:title1 title2:title2 title3:title3 title4:title4 title5:title5];
     return btn;
 }
-
-
 
 #pragma mark - 手势
 -(void)setThePan
@@ -115,10 +84,11 @@ const float animationSec = 0.1f;//按钮动画时间
 /**
  *  设置子POP按钮
  */
--(void)setUpChildPopBtn
+-(void)setUpChildPopBtnWithPOPhTitle1:(NSString *)title1 title2:(NSString *)title2 title3:(NSString *)title3 title4:(NSString *)title4 title5:(NSString *)title5
+
 {
     UIButton *pop1Btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [pop1Btn setTitle:@"复原" forState:UIControlStateNormal];
+    [pop1Btn setTitle:title1 forState:UIControlStateNormal];
     pop1Btn.backgroundColor = [UIColor redColor];
     pop1Btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     [pop1Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -131,7 +101,7 @@ const float animationSec = 0.1f;//按钮动画时间
     [pop1Btn addTarget:self action:@selector(popBtnClick:) forControlEvents: UIControlEventTouchUpInside];
     
     UIButton *pop2Btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [pop2Btn setTitle:@"放大V1" forState:UIControlStateNormal];
+    [pop2Btn setTitle:title2 forState:UIControlStateNormal];
     pop2Btn.backgroundColor = [UIColor blueColor];
     [pop2Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     pop2Btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
@@ -144,7 +114,7 @@ const float animationSec = 0.1f;//按钮动画时间
     [pop2Btn addTarget:self action:@selector(popBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *pop3Btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [pop3Btn setTitle:@"放大V2" forState:UIControlStateNormal];
+    [pop3Btn setTitle:title3 forState:UIControlStateNormal];
     [pop3Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     pop3Btn.backgroundColor = [UIColor whiteColor];
     pop3Btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
@@ -157,7 +127,7 @@ const float animationSec = 0.1f;//按钮动画时间
     [pop3Btn addTarget:self action:@selector(popBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *pop4Btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [pop4Btn setTitle:@"清除V1" forState:UIControlStateNormal];
+    [pop4Btn setTitle:title4 forState:UIControlStateNormal];
     pop4Btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     [pop4Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     pop4Btn.layer.cornerRadius = 15;
@@ -169,7 +139,7 @@ const float animationSec = 0.1f;//按钮动画时间
     [pop4Btn addTarget:self action:@selector(popBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *pop5Btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [pop5Btn setTitle:@"清除V2" forState:UIControlStateNormal];
+    [pop5Btn setTitle:title5 forState:UIControlStateNormal];
     pop5Btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     [pop5Btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     pop5Btn.layer.cornerRadius = 15;
@@ -191,7 +161,6 @@ const float animationSec = 0.1f;//按钮动画时间
     [pop3Btn setBackgroundImage:[UIImage imageNamed:@"mao3"] forState:UIControlStateSelected];
     [pop4Btn setBackgroundImage:[UIImage imageNamed:@"mao3"] forState:UIControlStateSelected];
     [pop5Btn setBackgroundImage:[UIImage imageNamed:@"mao3"] forState:UIControlStateSelected];
-    self.hidden = YES;
 }
 
 -(void)didMoveToSuperview
@@ -309,11 +278,15 @@ const float animationSec = 0.1f;//按钮动画时间
         } completion:^(BOOL finished) {
             
             [UIView animateWithDuration:animationSec animations:^{
-                self.pop4Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + moveBtn.sw_width*3 + 5*4 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
+                if (CGRectGetMaxX(self.pop4Btn.frame) >= SW_SCREEN_WIDTH - moveBtn.sw_width) {
+                    //换行
+                    self.pop4Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + moveBtn.sw_width*2 + 5*3 , moveBtn.sw_y + moveBtn.sw_width + 5, moveBtn.sw_width, moveBtn.sw_height);
+                }else{
+                    self.pop4Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + moveBtn.sw_width*3 + 5*4 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
+                }
             } completion:^(BOOL finished) {
                 //先移动pop3
                 [UIView animateWithDuration:animationSec animations:^{//1
-                    
                     self.pop3Btn.frame = CGRectMake(CGRectGetMaxX(moveBtn.frame) + moveBtn.sw_width*2 + 5*3 , moveBtn.sw_y, moveBtn.sw_width, moveBtn.sw_height);
                     
                 } completion:^(BOOL finished) {
@@ -418,6 +391,7 @@ const float animationSec = 0.1f;//按钮动画时间
     }];
 }
 
+#pragma mark - alpha & hidden
 -(void)setAlpha:(CGFloat)alpha
 {
     [UIView animateWithDuration:0.25 animations:^{

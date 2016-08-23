@@ -20,7 +20,6 @@
 
 const float CENTER_BUTTON_HEIGHT = 44;//按钮高度
 const NSInteger maxRulerValue = 2222;//尺子长度
-//const float animationSec = 0.1f;//按钮动画时间
 
 #define WINDOW [UIApplication sharedApplication].keyWindow
 
@@ -111,15 +110,17 @@ const NSInteger maxRulerValue = 2222;//尺子长度
  */
 @property (nonatomic, strong) UIButton *closeBtn;
 /**
- *  nav按钮
+ *  nav右上角按钮
  */
 @property (weak, nonatomic) IBOutlet UIButton *navRightBtn;
+
+@property (nonatomic, strong) UIButton *move;
 
 @end
 
 @implementation SWContrastVideoPlayerController
 
-#pragma mark - viewDidLoad
+#pragma mark - ViewController生命周期
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -179,9 +180,10 @@ const NSInteger maxRulerValue = 2222;//尺子长度
  */
 -(void)setUPTopRightBtn
 {
-    self.topRightBtn = [SWMoveButton SWMOveButton];
-    self.topRightBtn.frame = CGRectMake(SW_SCREEN_WIDTH - 60 - 5, 70, 60, 60);
+    self.topRightBtn = [SWMoveButton SWMOveButtonOpeningTitle:@"OpenIng" CloseTitle:@"CloseIng" andPOPhTitle1:@"复原" title2:@"放大V1" title3:@"放大V2" title4:@"清除V1" title5:@"清除V2"];
+    self.topRightBtn.frame = CGRectMake(0, 30, 60, 60);
     self.topRightBtn.moveButtonDelegate = self;
+    self.topRightBtn.hidden = YES;
     [WINDOW addSubview:self.topRightBtn];
 }
 
@@ -195,7 +197,9 @@ const NSInteger maxRulerValue = 2222;//尺子长度
     UIView *labelView = [[UIView alloc]init];
     [self.view addSubview:labelView];
     
-    //label1
+    /**
+     *  label1
+     */
     UILabel *video1Label = [[UILabel alloc]init];
     video1Label.text = @"底视频ONE :";
     video1Label.textColor = [UIColor whiteColor];
@@ -205,7 +209,9 @@ const NSInteger maxRulerValue = 2222;//尺子长度
         make.top.leading.mas_equalTo(labelView).offset(10);
     }];
     [video1Label setFont:[UIFont fontWithName:@"DBLCDTempBlack" size:18]];
-    //label2
+    /**
+     *  label2
+     */
     UILabel *video2Label = [[UILabel alloc]init];
     video2Label.text = @"顶视频TWO :";
     video2Label.textColor = [UIColor whiteColor];
@@ -263,8 +269,8 @@ const NSInteger maxRulerValue = 2222;//尺子长度
     [closeBtn addTarget:self action:@selector(closePileVideo:) forControlEvents:UIControlEventTouchUpInside];
     closeBtn.hidden = YES;
     self.closeBtn = closeBtn;
-    
 }
+
 
 #pragma mark - setUp监听
 -(void)setUpNotifcation
@@ -317,7 +323,7 @@ const NSInteger maxRulerValue = 2222;//尺子长度
     if (rulerScrollView.contentOffset.x <= 0 || //到最左
         rulerScrollView.bounds.origin.x >= contentOffSetWidth)//到最右
     {
-        NSLog(@"到顶或底");
+        NSLog(@"尺子到顶或底");
         [rulerScrollView setContentOffset:CGPointMake((rulerScrollView.contentSize.width-SW_SCREEN_WIDTH) / 2, 0) animated:NO];
         return;
     }
@@ -378,7 +384,7 @@ const NSInteger maxRulerValue = 2222;//尺子长度
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     [picker dismissViewControllerAnimated:YES completion:nil];
-    self.topRightBtn.hidden = NO;
+    //防止block引用循环
     __weak typeof(self) weakSelf = self;
     if (self.player1 == nil && self.whichBtnNum == 1) {//playr1
         SWPlayer *player1 = [[SWPlayer alloc]initWithFrame:self.player1View.frame vidoURLStr:info[UIImagePickerControllerMediaURL]];//player1
@@ -523,7 +529,6 @@ const NSInteger maxRulerValue = 2222;//尺子长度
 //pop子按钮点击事件
 -(void)moveBtn:(SWMoveButton *)moveBtn didClickChildPopBtnWithTag:(NSInteger)tag
 {
-    
     switch (tag) {
         case 0:
             //叠合视频
@@ -627,6 +632,12 @@ const NSInteger maxRulerValue = 2222;//尺子长度
 
 
 #pragma mark - 把player放最前
+/**
+ *  把player放最前
+ *
+ *  @param player     player
+ *  @param playerView 约束依赖的view
+ */
 -(void)changeVideoPlayerToFont:(SWPlayer *)player andView:(UIView *)playerView
 {
     if (player == nil) {
@@ -659,6 +670,7 @@ const NSInteger maxRulerValue = 2222;//尺子长度
      */
 //    player.playerLayer.videoGravity = AVLayerVideoGravityResize;
 }
+
 
 #pragma mark - 叠合视频
 /**
@@ -698,7 +710,7 @@ const NSInteger maxRulerValue = 2222;//尺子长度
         [UIView animateWithDuration:0.25 animations:^{
             [self.player1 mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.leading.trailing.bottom.mas_equalTo(self.view);
-                make.top.mas_equalTo(self.view);//.mas_offset( navHeight + statusHeight);
+                make.top.mas_equalTo(self.view);
             }];
             
             [self.player2 mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -706,6 +718,7 @@ const NSInteger maxRulerValue = 2222;//尺子长度
                 make.leading.mas_equalTo(self.view).mas_offset(0);
                 
             }];
+    
             if (self.player1.timeSlider.value < 10) {
                 
                 self.video1Label.text = [NSString stringWithFormat:@"底视频ONE : 0%.2f",self.player1.timeSlider.value];
@@ -799,20 +812,20 @@ const NSInteger maxRulerValue = 2222;//尺子长度
     
     if (orientation == UIInterfaceOrientationLandscapeRight) // home键靠右
     {
-//        NSLog(@"home键靠右");
+        //        NSLog(@"home键靠右");
         [self screenLandsCapeLeftOrRight];
     }
     
     if (
         orientation ==UIInterfaceOrientationLandscapeLeft) // home键靠左
     {
-//        NSLog(@"home键靠左");
+        //        NSLog(@"home键靠左");
         [self screenLandsCapeLeftOrRight];
     }
     
     if (orientation == UIInterfaceOrientationPortrait)
     {
-//        NSLog(@"恢复");
+        //        NSLog(@"恢复");
         if (_isDoubleSreen == NO && (self.player1.playerIsFont == NO && self.player2.playerIsFont  == NO)) {
         
             [self.navigationController setNavigationBarHidden:NO animated:YES];
@@ -830,7 +843,7 @@ const NSInteger maxRulerValue = 2222;//尺子长度
     
     if (orientation == UIInterfaceOrientationPortraitUpsideDown)
     {
-//        NSLog(@"down");
+        //        NSLog(@"down");
     }
 }
 
@@ -838,6 +851,7 @@ const NSInteger maxRulerValue = 2222;//尺子长度
  *  旋转为左右时
  */
 -(void)screenLandsCapeLeftOrRight{
+    //隐藏nav
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
     _isLandscapeLeftOrRight = YES;

@@ -12,10 +12,10 @@
 /**
  *  获取视频第一帧
  *
- *  @param url  <#url description#>
- *  @param size <#size description#>
+ *  @param url  video的URL
+ *  @param size 想要的图片大小
  *
- *  @return <#return value description#>
+ *  @return image
  */
 + (UIImage *)firstFrameWithVideoURL:(NSURL *)url size:(CGSize)size;
 @end

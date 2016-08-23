@@ -41,15 +41,6 @@
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
--(void)popToVc:(UIButton *)sender
-{
-    [self.navigationController popViewControllerAnimated:YES];
-}
 
 - (IBAction)cleanTempCaChe:(UIButton *)sender {
     [sender setTitle:@"正在删除..." forState:UIControlStateNormal];
@@ -93,6 +84,7 @@
     return self.fileArray.count > 0 ? self.fileArray.count : 0;
 }
 
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"fileCell" forIndexPath:indexPath];
@@ -111,6 +103,7 @@
     return cell;
 }
 
+
 /**
  *  获取temp中的文件
  *
@@ -119,8 +112,7 @@
 -(NSMutableArray *)getTempFlies {
     
     NSString *tempPatch = NSTemporaryDirectory();
-    self.tempPatch = tempPatch;
-//    NSLog(@"TEMPpatch = %@",tempPatch);
+    self.tempPatch = tempPatch;//temp完整路径
     NSFileManager *fliemanager = [NSFileManager defaultManager];
     BOOL isHave = [fliemanager fileExistsAtPath:tempPatch];
     if (isHave) {
